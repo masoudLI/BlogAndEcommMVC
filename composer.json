@@ -1,0 +1,21 @@
+{
+    "name": "massoud/php",
+    "authors": [
+        {
+            "name": "Massoud Emami",
+            "email": "massoudemami81@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "src/Framework/",
+            "App\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^7.4.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2"
+    }
+}
