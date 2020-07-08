@@ -2,6 +2,7 @@
 
 namespace App\Blog;
 
+use Framework\Renderer\PHPRenderer;
 use Framework\Router;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -10,7 +11,7 @@ class BlogModule
 
 
 
-    public function __construct(Router $router)
+    public function __construct(Router $router, PHPRenderer $renderer)
     {
         $router->get('blog', '/blog', [$this, 'index'], []);
         $router->get('blog_show', '/blog/{slug}', [$this, 'show'], [
