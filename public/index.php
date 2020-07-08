@@ -1,10 +1,12 @@
 <?php
 
 use Framework\App;
+use GuzzleHttp\Psr7\ServerRequest;
 
 require '../vendor/autoload.php';
 
 
 $app = new App();
 
-$app->run();
+$response = $app->run(ServerRequest::fromGlobals());
+\Http\Response\send($response);
