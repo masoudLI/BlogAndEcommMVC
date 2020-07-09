@@ -1,15 +1,20 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 use Framework\App;
 use App\Blog\BlogModule;
-use Framework\Renderer\PHPRenderer;
 use GuzzleHttp\Psr7\ServerRequest;
+use Framework\Renderer\TwigRenderer;
 
-require '../vendor/autoload.php';
+chdir(dirname(__DIR__));
+require 'vendor/autoload.php';
 
-$renderer = new PHPRenderer();
-$renderer->addPath(dirname(__DIR__) . '/views');
+
+$renderer = new TwigRenderer(dirname(__DIR__) . '/views');
+
 $app = new App([
+
   BlogModule::class
 ], [
   'renderer' => $renderer
