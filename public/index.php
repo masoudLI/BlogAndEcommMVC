@@ -10,15 +10,20 @@ use Framework\Renderer\TwigRenderer;
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
+$modules = [
+    BlogModule::class
+];
 
-$renderer = new TwigRenderer(dirname(__DIR__) . '/views');
+$builder = new \DI\ContainerBuilder();
+$builder->addDefinitions('config/config.php');
+foreach ($modules as $module) {
+    if ($module::DEFINITIONS) {
+        $builder->addDefinitions($module::DEFINITIONS);
+    }
+}
 
-$app = new App([
-
-  BlogModule::class
-], [
-  'renderer' => $renderer
-]);
+$container = $builder->build();
+$app = new App($container, $modules);
 
 $response = $app->run(ServerRequest::fromGlobals());
 \Http\Response\send($response);
