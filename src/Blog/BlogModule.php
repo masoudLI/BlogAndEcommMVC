@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\Blog;
 
@@ -12,6 +14,8 @@ class BlogModule extends Module
 {
 
     const DEFINITIONS = __DIR__ . '/config.php';
+    const MIGRATIONS  = __DIR__ . '/db/migrations';
+    const SEEDS  = __DIR__ . '/db/seeds';
 
     private RendererInterface $renderer;
 
@@ -22,7 +26,7 @@ class BlogModule extends Module
         $this->renderer->addPath('blog', __DIR__ . '/views');
         $router->get('blog', $prefix, BlogAction::class, []);
         $router->get('blog_show', $prefix . '/{slug}', BlogAction::class, [
-        'slug' => '[a-z\-0-9]+'
+            'slug' => '[a-z\-0-9]+'
         ]);
     }
 }

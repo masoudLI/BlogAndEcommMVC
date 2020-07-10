@@ -6,11 +6,14 @@ use Framework\Renderer\TwigRendererFactory;
 use Framework\Router;
 use Framework\Router\RouterTwigExtension;
 
-use function DI\create;
-use function DI\factory;
-use function DI\get;
+use function DI\{create, factory, get};
+
 
 return [
+    'database.host' => 'localhost',
+    'database.username' => 'root',
+    'database.password' => '',
+    'database.name' => 'monframework',
     'views_path' => dirname(__DIR__) . '/views',
     'twig.extensions' => [
         get(RouterTwigExtension::class)

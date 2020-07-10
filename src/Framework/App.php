@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework;
 
+use App\Error\ModuleError;
 use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -22,9 +23,9 @@ class App
      */
     private array $modules = [];
 
-  /**
-   * @param string[] module list a charger
-   */
+    /**
+     * @param string[] module list a charger
+     */
     public function __construct(ContainerInterface $container, array $modules = [])
     {
         $this->container = $container;
@@ -38,13 +39,13 @@ class App
         $uri = $request->getUri()->getPath();
         if (empty($uri) && $uri[-1] === '/') {
             return (new Response())
-            ->withStatus(301)
-            ->withHeader('Location', substr($uri, 0, -1));
+                ->withStatus(301)
+                ->withHeader('Location', substr($uri, 0, -1));
         }
 
         $route = $this->container->get(Router::class)->match($request);
         if ($route === null) {
-            return new Response(404, [], '<h1>Erreur 404</h1>');
+            return new Response(404, [], (new ModuleError($this->container))->error());
         }
         $params = $route->getParams();
         $request = array_reduce(array_keys($params), function ($request, $key) use ($params) {
@@ -63,5 +64,15 @@ class App
         } else {
             throw new \Exception("The response is not string Or an instance of ResponseInterface");
         }
+    }
+
+    /**
+     * Get the value of container
+     *
+     * @return  ContainerInterface
+     */
+    public function getContainer()
+    {
+        return $this->container;
     }
 }

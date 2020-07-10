@@ -1,0 +1,75 @@
+{% extends 'layout.twig' %}
+
+{% block title "Mes articles" %}
+
+{% block stylesheets %}
+	<style>
+		.header-mirror {
+			margin-bottom: -70px;
+			padding-bottom: 125px;
+			background-color: #fff;
+			border: none;
+		}
+		.header-dark {
+			color: #fff;
+		}
+		.header {
+			position: relative;
+			padding: 25px 0;
+			border-bottom: 1px solid #e5e5e5;
+			background-color: #f9f9f9;
+			background-position: 50%;
+			background-size: cover;
+			-webkit-transition-duration: 0.3s;
+			transition-duration: 0.3s;
+		}
+		.header-padding .container,
+		.header-padding .formation-header {
+			padding: 3.75rem 0;
+		}
+		.container,
+		.formation-header {
+			width: 100%;
+			position: relative;
+			max-width: 1130px;
+			padding-left: 15px;
+			padding-right: 15px;
+			margin: 0 auto;
+		}
+		.title {
+			font-size: 42px;
+			font-weight: 700;
+			line-height: 1.2;
+			margin-bottom: 1rem;
+		}
+		.header-mirror:before,
+		.header-overlay:before {
+			content: "";
+			display: block;
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 0;
+			background: rgba(64, 72, 82, .8);
+			-webkit-transition-duration: 0.3s;
+			transition-duration: 0.3s;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+
+	<div class="header header-mirror header-dark header-padding" style="background-image:url(../../images/3.jpg);">
+		<div class="container">
+			<div class="title">
+				Page Introuvable
+			</div>
+			<p>
+				Mais rassurez vous tout espoir n'est pas perdu
+			</p>
+		</div>
+	</div>
+
+{% endblock %}
