@@ -37,13 +37,14 @@ class PagePostIndex
         if ($request->getAttribute('slug')) {
             return $this->show($request);
         }
-        return $this->index();
+        return $this->index($request);
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
-        $posts = $this->postRepository->findAll();
+        $params = $request->getQueryParams();
+        $posts = $this->postRepository->findPaginated(12, $params['p'] ?? 1);
         return $this->renderer->render('@blog/index', [
             'posts' => $posts
         ]);

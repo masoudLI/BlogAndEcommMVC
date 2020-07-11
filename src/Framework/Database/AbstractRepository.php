@@ -2,8 +2,10 @@
 
 namespace Framework\Database;
 
-use Framework\Exceptions\NoRecordException;
 use \PDO;
+use Pagerfanta\Pagerfanta;
+use App\Framework\Database\PaginatedQuery;
+use Framework\Exceptions\NoRecordException;
 
 abstract class AbstractRepository
 {
@@ -31,6 +33,20 @@ abstract class AbstractRepository
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+
+    public function findPaginated(int $maxPerPage, int $currentPage): Pagerfanta
+    {
+        $query = new PaginatedQuery(
+            $this->pdo,
+            "SELECT * FROM {$this->table}",
+            "SELECT COUNT(id) FROM {$this->table}",
+            $this->entity
+        );
+        return (new Pagerfanta($query))
+            ->setMaxPerPage($maxPerPage)
+            ->setCurrentPage($currentPage);
     }
 
 

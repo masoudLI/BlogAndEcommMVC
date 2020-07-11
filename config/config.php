@@ -1,10 +1,12 @@
 <?php
 
 use Framework\Renderer\RendererInterface;
-use Framework\Renderer\TwigRenderer;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\Router;
 use Framework\Router\RouterTwigExtension;
+use Framework\Twig\PagerFantaExtension;
+use Framework\Twig\TextExtension;
+use Framework\Twig\TimeExtension;
 use Psr\Container\ContainerInterface;
 
 use function DI\{create, factory, get};
@@ -17,7 +19,10 @@ return [
     'database.name' => 'monframework',
     'views_path' => dirname(__DIR__) . '/views',
     'twig.extensions' => [
-        get(RouterTwigExtension::class)
+        get(RouterTwigExtension::class),
+        get(PagerFantaExtension::class),
+        get(TextExtension::class),
+        get(TimeExtension::class)
     ],
     RendererInterface::class => factory(TwigRendererFactory::class),
     Router::class => create(),
