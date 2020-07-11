@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use App\Blog\Actions\PagePostIndex;
 use Framework\App;
 use App\Blog\BlogModule;
 use App\Error\ModuleError;
 use GuzzleHttp\Psr7\ServerRequest;
 use Framework\Renderer\TwigRenderer;
+use Framework\Router;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -22,9 +24,9 @@ foreach ($modules as $module) {
         $builder->addDefinitions($module::DEFINITIONS);
     }
 }
-
 $container = $builder->build();
 $app = new App($container, $modules);
+$app->getContainer()->get(Router::class)->get('home', '/', PagePostIndex::class, []);
 
 if (php_sapi_name() !== 'cli') {
     $response = $app->run(ServerRequest::fromGlobals());

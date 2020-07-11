@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Blog;
 
-use App\Blog\Actions\BlogAction;
+use App\Blog\Actions\PagePostIndex;
 use Framework\Module;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;
@@ -24,9 +24,10 @@ class BlogModule extends Module
     {
         $this->renderer = $renderer;
         $this->renderer->addPath('blog', __DIR__ . '/views');
-        $router->get('blog', $prefix, BlogAction::class, []);
-        $router->get('blog_show', $prefix . '/{slug}', BlogAction::class, [
-            'slug' => '[a-z\-0-9]+'
+        $router->get('blog_index', $prefix, PagePostIndex::class, []);
+        $router->get('blog_show', $prefix . '/{slug}-{id}', PagePostIndex::class, [
+            'slug' => '[a-z\-0-9]+',
+            'id' => '[0-9]+'
         ]);
     }
 }

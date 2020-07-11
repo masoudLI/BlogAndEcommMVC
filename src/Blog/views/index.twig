@@ -4,13 +4,16 @@
 
 {% block body %}
 
-  <h1>salut</h1>
-  <ul>
-    <li><a href="{{ path('blog_show', {slug: 'azeaaze'}) }}">salut</a></li>
-    <li>salut</li>
-    <li>salut</li>
-    <li>salut</li>
-    <li>salut</li>
-  </ul>
+	<h1>salut</h1>
+	<ul>
+		{% for post in posts %}
+			<li>
+        <a href="{{ path('blog_show', {slug: post.slug, id: post.id}) }}">{{post.name}}</a>
+        <div>
+          {{post.created_at.format('Y-m-d H:i:s')}}
+        </div>
+			</li>
+		{% endfor %}
+	</ul>
 
 {% endblock %}

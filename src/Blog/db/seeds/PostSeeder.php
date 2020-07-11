@@ -14,7 +14,7 @@ class PostSeeder extends AbstractSeed
             $data[] = [
                 'name'          => $faker->name,
                 'slug'          => $faker->slug,
-                'content'       => $faker->text,
+                'content'       => $faker->text(3000),
                 'created_at'    => date('Y-m-d H:i:s', $faker->unixTime('now')),
                 'updated_at'    => date('Y-m-d H:i:s', $faker->unixTime('now'))
             ];
