@@ -13,8 +13,8 @@ class PostRepository extends AbstractRepository
     protected string $entity = Post::class;
 
 
-    public function findAllOrderLimit () {
-        return $this->findAll("SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT 10");
+    protected function findPaginatedQuerylimit()
+    {
+        return " ORDER BY created_at DESC";
     }
-
 }

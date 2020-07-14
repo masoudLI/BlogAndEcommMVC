@@ -43,6 +43,28 @@ class Router
         $this->map->get($name, $path, $callable)->tokens((array) $tokens);
     }
 
+    /**
+     * @param string $path
+     * @param string|callable $callable
+     * @param string $name
+     * @param array|null $tokens
+     */
+
+    public function post(?string $name = null, ?string $path = null, $callable, ?array $tokens = [])
+    {
+        $this->map->post($name, $path, $callable)->tokens((array) $tokens);
+    }
+
+    /**
+     * @param string $path
+     * @param string|callable $callable
+     * @param string $name
+     * @param array|null $tokens
+     */
+    public function delete(?string $name = null, string $path, $callable, ?array $tokens = [])
+    {
+        $this->map->delete($name, $path, $callable)->tokens((array)$tokens);
+    }
 
 
     public function match(ServerRequestInterface $request): ?Route

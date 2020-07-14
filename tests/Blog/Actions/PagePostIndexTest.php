@@ -14,18 +14,17 @@ use Prophecy\PhpUnit\ProphecyTrait;
 
 class PagePostIndexTest extends TestCase
 {
-    use ProphecyTrait;
-
+    
     private $renderer;
     private $router;
     private $postRepository;
     private $action;
+    use ProphecyTrait;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->renderer = $this->prophesize(RendererInterface::class);
-        $this->renderer->render()->willReturn("");
         $this->router = $this->prophesize(Router::class);
         $this->postRepository = $this->prophesize(PostRepository::class);
         $this->action = new PagePostIndex(

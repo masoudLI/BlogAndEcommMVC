@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Admin\AdminModule;
 use App\Blog\Actions\PagePostIndex;
 use Framework\App;
 use App\Blog\BlogModule;
@@ -14,6 +15,7 @@ chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
 $modules = [
+    AdminModule::class,
     BlogModule::class
 ];
 

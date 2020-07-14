@@ -50,6 +50,12 @@ abstract class AbstractRepository
     }
 
 
+    protected function findPaginatedQuerylimit()
+    {
+        return "SELECT * FROM {$this->table}";
+    }
+
+
     public function findAll(): array
     {
         $query = $this->pdo->query("SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT 10");
@@ -70,6 +76,30 @@ abstract class AbstractRepository
         return $record;
     }
 
+    public function update(int $id, array $params): bool
+    {
+        $filedQuery = $this->buildFieldQuery($params);
+        $params['id'] = $id;
+        $statement = $this->pdo->prepare("UPDATE {$this->table} SET $filedQuery where id = :id");
+        return $statement->execute($params);
+    }
+
+    public function insert(array $params): bool
+    {
+        $fields = array_keys($params);
+        $values = join(', ', array_map(function ($field) {
+            return ':' . "$field";
+        }, $fields));
+        $fields = join(', ', $fields);
+        $statement = $this->pdo->prepare("INSERT INTO {$this->table} ($fields) VALUES ($values)");
+        return $statement->execute($params);
+    }
+
+    public function delete(int $id): bool
+    {
+        $statement = $this->pdo->prepare("DELETE FROM $this->table where id = :id");
+        return $statement->execute(['id' => $id]);
+    }
 
     public function fetchOrFail(string $query, array $params = [])
     {
@@ -81,5 +111,18 @@ abstract class AbstractRepository
             $query->setFetchMode(PDO::FETCH_OBJ);
         }
         return $query->fetch();
+    }
+
+
+    private function buildFieldQuery(array $params)
+    {
+        return join(', ', array_map(function ($field) {
+            return "$field = :$field";
+        }, array_keys($params)));
+    }
+
+    public function getPdo()
+    {
+        return $this->pdo;
     }
 }

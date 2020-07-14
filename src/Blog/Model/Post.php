@@ -3,7 +3,6 @@
 namespace App\Blog\Model;
 
 use DateTime;
-use DateTimeInterface;
 
 class Post
 {
@@ -29,12 +28,12 @@ class Post
     private string $content;
 
     /**
-     * @var 
+     * @var
      */
     private $created_at;
 
     /**
-     * @var 
+     * @var
      */
     private $updated_at;
 
@@ -42,7 +41,7 @@ class Post
      * Get the value of id
      *
      * @return  int
-     */ 
+     */
     public function getId()
     {
         return $this->id;
@@ -54,7 +53,7 @@ class Post
      * @param  int  $id
      *
      * @return  self
-     */ 
+     */
     public function setId(int $id)
     {
         $this->id = $id;
@@ -66,7 +65,7 @@ class Post
      * Get the value of name
      *
      * @return  string
-     */ 
+     */
     public function getName()
     {
         return $this->name;
@@ -78,7 +77,7 @@ class Post
      * @param  string  $name
      *
      * @return  self
-     */ 
+     */
     public function setName(string $name)
     {
         $this->name = $name;
@@ -90,7 +89,7 @@ class Post
      * Get the value of slug
      *
      * @return  string
-     */ 
+     */
     public function getSlug()
     {
         return $this->slug;
@@ -102,7 +101,7 @@ class Post
      * @param  string  $slug
      *
      * @return  self
-     */ 
+     */
     public function setSlug(string $slug)
     {
         $this->slug = $slug;
@@ -114,7 +113,7 @@ class Post
      * Get the value of content
      *
      * @return  string
-     */ 
+     */
     public function getContent()
     {
         return $this->content;
@@ -126,7 +125,7 @@ class Post
      * @param  string  $content
      *
      * @return  self
-     */ 
+     */
     public function setContent(string $content)
     {
         $this->content = $content;
@@ -137,9 +136,9 @@ class Post
     /**
      * Get the value of created_at
      *
-     * @return  DateTimeInterface
-     */ 
-    public function getCreated_at(): DateTimeInterface
+     * @return  DateTime
+     */
+    public function getCreated_at(): DateTime
     {
         if (is_string($this->created_at)) {
             return new DateTime($this->created_at);
@@ -149,11 +148,11 @@ class Post
     /**
      * Set the value of created_at
      *
-     * @param  DateTimeInterface  $created_at
+     * @param  DateTime  $created_at
      *
      * @return  self
-     */ 
-    public function setCreated_at(DateTimeInterface $created_at)
+     */
+    public function setCreated_at(DateTime $created_at)
     {
         if (is_string($created_at)) {
             $this->created_at = new DateTime($created_at);
@@ -167,7 +166,7 @@ class Post
      * Get the value of updated_at
      *
      * @return  DateTimeInterface
-     */ 
+     */
     public function getUpdated_at()
     {
         return $this->updated_at;
@@ -179,7 +178,7 @@ class Post
      * @param  DateTimeInterface  $updated_at
      *
      * @return  self
-     */ 
+     */
     public function setUpdated_at(DateTimeInterface $updated_at)
     {
         $this->updated_at = $updated_at;

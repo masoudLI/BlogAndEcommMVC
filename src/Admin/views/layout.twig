@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title "Mon site " %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css"
+        integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <style>
+        body {
+            padding-top: 5rem;
+        }
+
+        .pagerfanta {}
+
+        .pagerfanta a,
+        .pagerfanta span {
+            display: inline-block;
+            border: 1px solid blue;
+            color: blue;
+            margin-right: .2em;
+            padding: .25em .35em;
+        }
+
+        .pagerfanta a {
+            text-decoration: none;
+        }
+
+        .pagerfanta a:hover {
+            background: #ccf;
+        }
+
+        .pagerfanta .dots {
+            border-width: 0;
+        }
+
+        .pagerfanta .current {
+            background: #ccf;
+            font-weight: bold;
+        }
+
+        .pagerfanta .disabled {
+            border-color: #ccf;
+            color: #ccf;
+        }
+
+        COLORS: .pagerfanta a,
+        .pagerfanta span {
+            border-color: blue;
+            color: blue;
+        }
+
+        .pagerfanta a:hover {
+            background: #ccf;
+        }
+
+        .pagerfanta .current {
+            background: #ccf;
+        }
+
+        .pagerfanta .disabled {
+            border-color: #ccf;
+            color: #cf;
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body>
+
+    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+        <a class="navbar-brand" href="{{ path('blog_admin_index') }}">Admin</a>
+        <ul class="nav navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path('blog_index') }}">Articles</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container"> {% block body %}{% endblock %}
+
+    </div><!-- /.container -->
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"
+        integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.locales.min.js"></script>
+    <script>
+    </script>
+    {% block javascripts %}{% endblock %}
+</body>
+
+</html>
