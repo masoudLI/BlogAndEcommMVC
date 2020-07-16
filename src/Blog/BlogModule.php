@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Blog;
 
 use App\Blog\Actions\CategoryCrudAction;
+use App\Blog\Actions\CategoryShowAction;
 use App\Blog\Actions\PostCrudAction;
 use App\Blog\Actions\PagePostIndex;
 use Framework\Module;
@@ -29,6 +30,13 @@ class BlogModule extends Module
             'slug' => '[a-z\-0-9]+',
             'id' => '[0-9]+'
         ]);
+
+
+        $router->get('blog_category_index', $prefix . '/category/{slug}-{id}', CategoryShowAction::class, [
+            'slug' => '[a-z\-0-9]+',
+            'id' => '[0-9]+'
+        ]);
+
 
         if ($container->has('admin')) {
             $prefixAdmin = $container->get('admin');

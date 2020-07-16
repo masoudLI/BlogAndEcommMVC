@@ -145,6 +145,9 @@ class Post
      */
     public function getCreated_at()
     {
+        if (is_string($this->created_at)) {
+            return $this->created_at = new DateTime($this->created_at);
+        }
         return $this->created_at;
     }
 

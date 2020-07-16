@@ -55,7 +55,12 @@ class AbstractRepository
         return "SELECT * FROM {$this->table}";
     }
 
-
+    
+    /**
+     * findList
+     *
+     * @return array
+     */
     public function findList()
     {
         $results = $this->pdo->query("SELECT id, name FROM {$this->table}")
@@ -67,10 +72,28 @@ class AbstractRepository
         return $lists;
     }
 
+    /**
+     * Récupère une ligne par rapport à un champs
+     *
+     * @param string $field
+     * @param string $value
+     * @return array
+     * @throws NoRecordException
+     */
+    public function findBy(string $field, string $value)
+    {
+        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE $field = :field", ['field' => $value], $field);
+    }
 
+    
+    /**
+     * findAll
+     *
+     * @return array
+     */
     public function findAll(): array
     {
-        $query = $this->pdo->query("SELECT * FROM {$this->table} ORDER BY created_at DESC LIMIT 10");
+        $query = $this->pdo->query("SELECT * FROM {$this->table}");
         if ($this->entity) {
             $query->setFetchMode(PDO::FETCH_CLASS, $this->entity);
         } else {
@@ -78,16 +101,25 @@ class AbstractRepository
         }
         return $query->fetchAll();
     }
-
+    
+    /**
+     * find
+     *
+     * @param  mixed $id
+     * @return void
+     */
     public function find(int $id)
     {
-        $record = $this->fetchOrFail("SELECT * FROM {$this->table} where id = :id", ['id' => $id]);
-        if ($record === false) {
-            throw new NoRecordException("{$this->table}", $id);
-        }
-        return $record;
+        return $this->fetchOrFail("SELECT * FROM {$this->table} where id = :id", ['id' => $id]);
     }
-
+    
+    /**
+     * update
+     *
+     * @param  mixed $id
+     * @param  mixed $params
+     * @return bool
+     */
     public function update(int $id, array $params): bool
     {
         $filedQuery = $this->buildFieldQuery($params);
@@ -95,7 +127,13 @@ class AbstractRepository
         $statement = $this->pdo->prepare("UPDATE {$this->table} SET $filedQuery where id = :id");
         return $statement->execute($params);
     }
-
+    
+    /**
+     * insert
+     *
+     * @param  mixed $params
+     * @return bool
+     */
     public function insert(array $params): bool
     {
         $fields = array_keys($params);
@@ -106,14 +144,28 @@ class AbstractRepository
         $statement = $this->pdo->prepare("INSERT INTO {$this->table} ($fields) VALUES ($values)");
         return $statement->execute($params);
     }
-
+    
+    /**
+     * delete
+     *
+     * @param  mixed $id
+     * @return bool
+     */
     public function delete(int $id): bool
     {
         $statement = $this->pdo->prepare("DELETE FROM $this->table where id = :id");
         return $statement->execute(['id' => $id]);
     }
-
-    public function fetchOrFail(string $query, array $params = [])
+    
+    /**
+     * fetchOrFail
+     *
+     * @param  mixed $query
+     * @param  mixed $params
+     * @param  mixed $exeption
+     * @return void
+     */
+    public function fetchOrFail(string $query, array $params = [], $exeption = null)
     {
         $query = $this->pdo->prepare($query);
         $query->execute($params);
@@ -122,7 +174,11 @@ class AbstractRepository
         } else {
             $query->setFetchMode(PDO::FETCH_OBJ);
         }
-        return $query->fetch();
+        $record = $query->fetch();
+        if ($record === false) {
+            throw new NoRecordException("{$this->table}", $exeption);
+        }
+        return $record;
     }
 
 
@@ -146,7 +202,7 @@ class AbstractRepository
         return $stat->fetchColumn() !== false;
     }
 
-    
+
     /**
      * getPdo
      *

@@ -9,9 +9,11 @@ use Framework\Renderer\RendererInterface;
 use Framework\Router;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class PagePostIndex
+
+class CategoryShowAction
 {
 
+    private $categoryReposit;
     /**
      * @var RendererInterface
      */
@@ -25,10 +27,8 @@ class PagePostIndex
 
     use RouterAwareAction;
 
-
-    private $categoryReposit;
-
     public function __construct(RendererInterface $renderer, PostRepository $postRepository, Router $router, CategoryRepository $categoryReposit)
+
     {
         $this->renderer = $renderer;
         $this->postRepository = $postRepository;
@@ -38,38 +38,14 @@ class PagePostIndex
 
     public function __invoke(Request $request)
     {
-        if ($request->getAttribute('slug')) {
-            return $this->show($request);
-        }
-        return $this->index($request);
-    }
-
-
-    public function index(Request $request)
-    {
+        $category = $this->categoryReposit->findBy('slug', $request->getAttribute('slug'));
         $params = $request->getQueryParams();
-        $posts = $this->postRepository->findPaginatedPublic(12, $params['p'] ?? 1);
+        $posts = $this->postRepository->findPaginatedPublicForCategory(12, $params['p'] ?? 1, $category->getId());
         $categories = $this->categoryReposit->findAll();
-        return $this->renderer->render('@blog/index', [
+        return $this->renderer->render('@blog/category/index', [
             'posts' => $posts,
+            'category' => $category,
             'categories' => $categories
-        ]);
-    }
-
-    public function show(Request $request)
-    {
-        $id = $request->getAttribute('id');
-        $post = $this->postRepository->find($id);
-        $slug = $request->getAttribute('slug');
-
-        if ($slug !== $post->getSlug()) {
-            return $this->redirect('blog_show', [
-                'id' => $post->getId(),
-                'slug' => $post->getSlug()
-            ]);
-        }
-        return $this->renderer->render('@blog/show', [
-            'post' => $post
         ]);
     }
 }

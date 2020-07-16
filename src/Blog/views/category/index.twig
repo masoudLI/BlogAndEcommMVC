@@ -1,0 +1,25 @@
+{% extends "layout.twig" %}
+
+{% block title %}
+	{{ category.name }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="block_categorie">
+		{% for c in categories  %}
+			<a class="block_categorie_item {% if c.id == category.id %}acticeCat{% endif %}" href="{{ path('blog_category_index', {id: c.id, slug: c.slug}) }}">{{ c.name }}</a>
+		{% endfor %}
+	</div>
+	<section class="container-produit p-t">
+		{% if category %}
+			<h1 class="title">Catégorie -
+				{{ category.name }}
+			</h1>
+		{% endif %}
+	</section>
+
+	<ul class="pagerfanta">
+		{{ paginate(posts, 'blog_category_index') }}
+	</ul>
+{% endblock %}
