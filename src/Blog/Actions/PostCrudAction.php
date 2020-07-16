@@ -64,10 +64,6 @@ class PostCrudAction
     {
         if ($request->getMethod() === 'POST') {
             $params = $this->prePersist($request);
-            $params = array_merge($params, [
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
                 $this->postRepository->insert($params);
@@ -77,7 +73,7 @@ class PostCrudAction
             $errors = $validator->getErrors();
         }
         return $this->renderer->render('@blog/admin/posts/create', [
-            'errors' => $errors
+            'errors' => $errors ?? ''
         ]);
     }
 
@@ -87,9 +83,6 @@ class PostCrudAction
         $item = $this->postRepository->find($id);
         if ($request->getMethod() === 'POST') {
             $params = $this->prePersist($request);
-            $params = array_merge($params, [
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
                 $this->postRepository->update($id, $params);
@@ -97,12 +90,12 @@ class PostCrudAction
                 return $this->redirect('blog_admin_index');
             }
             $errors = $validator->getErrors();
+            $params['id'] = $item->getId();
+            $item = $params;
         }
-        $params['id'] = $item->getId();
-        $item = $params;
         return $this->renderer->render('@blog/admin/posts/edit', [
             'item' => $item,
-            'errors' => $errors
+            'errors' => $errors ?? ''
         ]);
     }
 
@@ -121,9 +114,12 @@ class PostCrudAction
      */
     public function prePersist(Request $request): array
     {
-        return array_filter($request->getParsedBody(), function ($key) {
-            return in_array($key, ['name', 'slug', 'content']);
+        $params = array_filter($request->getParsedBody(), function ($key) {
+            return in_array($key, ['name', 'slug', 'content', 'created_at']);
         }, ARRAY_FILTER_USE_KEY);
+        return array_merge($params, [
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
     }
 
     public function getValidator(Request $request)
