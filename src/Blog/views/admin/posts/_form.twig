@@ -2,3 +2,4 @@
 {{field('slug', item.slug, 'Slug de l\'article')}}
 {{field('content', item.content, 'Contenu', {type: 'textarea'})}}
 {{field('created_at', item.created_at.format('Y/m/d H:i:s'), 'Date de création', {class: 'datepicker'})}}
+{{field('category_id', item.category, 'Les categories', {options: categories})}}

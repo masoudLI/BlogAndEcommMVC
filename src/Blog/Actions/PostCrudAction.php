@@ -2,133 +2,65 @@
 
 namespace App\Blog\Actions;
 
-use App\Blog\Repository\PostRepository;
-use Framework\Actions\RouterAwareAction;
-use Framework\Renderer\RendererInterface;
+use App\Blog\Model\Post;
+use App\Blog\Repository\CategoryRepository;
 use Framework\Router;
+use Framework\Actions\CrudAction;
 use Framework\Session\FlashService;
-use Framework\Validator;
+use App\Blog\Repository\PostRepository;
+use Framework\Renderer\RendererInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class PostCrudAction
+class PostCrudAction extends CrudAction
 {
-    private $renderer;
 
-    private $postRepository;
+    protected $viewPath = "@blog/admin/posts";
 
-    private FlashService $flash;
+    protected $routePrefix = "blog_admin_posts";
 
-    private array $paramsAccepets = ['name', 'slug', 'content'];
-
-    use RouterAwareAction;
-
-    private $router;
+    private $categoryRepository;
 
     public function __construct(
         RendererInterface $renderer,
         PostRepository $postRepository,
         Router $router,
-        FlashService $flash
+        FlashService $flash,
+        CategoryRepository $categoryRepository
     ) {
-        $this->renderer = $renderer;
-        $this->postRepository = $postRepository;
-        $this->router = $router;
-        $this->flash = $flash;
+        parent::__construct($renderer, $postRepository, $router, $flash);
+        $this->categoryRepository = $categoryRepository;
     }
 
-    public function __invoke(Request $request)
+    protected function formParams(array $params): array
     {
-        if ($request->getMethod() === 'DELETE') {
-            return $this->delete($request);
-        }
-        if ($request->getAttribute('id')) {
-            return $this->edit($request);
-        }
-        if (substr((string)$request->getUri(), -6) === 'create') {
-            return $this->create($request);
-        }
-        return $this->index($request);
+        $params['categories'] = $this->categoryRepository->findList();
+        return $params;
     }
 
-
-    public function index(Request $request)
+    protected function getNewEntity()
     {
-        $params = $request->getQueryParams();
-        $items = $this->postRepository->findPaginated(12, $params['p'] ?? 1);
-        return $this->renderer->render('@blog/admin/posts/index', [
-            'items' => $items
-        ]);
+        $post = new Post();
+        $post->setCreated_at(new \DateTime());
+        return $post;
     }
 
-    public function create(Request $request)
-    {
-        if ($request->getMethod() === 'POST') {
-            $params = $this->prePersist($request);
-            $validator = $this->getValidator($request);
-            if ($validator->isValid()) {
-                $this->postRepository->insert($params);
-                $this->flash->addFlash('success', "L'article a bien été enregistré");
-                return $this->redirect('blog_admin_index');
-            }
-            $errors = $validator->getErrors();
-        }
-        return $this->renderer->render('@blog/admin/posts/create', [
-            'errors' => $errors ?? ''
-        ]);
-    }
-
-    public function edit(Request $request)
-    {
-        $id = (int)$request->getAttribute('id');
-        $item = $this->postRepository->find($id);
-        if ($request->getMethod() === 'POST') {
-            $params = $this->prePersist($request);
-            $validator = $this->getValidator($request);
-            if ($validator->isValid()) {
-                $this->postRepository->update($id, $params);
-                $this->flash->addFlash('success', "L'article a bien été modifié");
-                return $this->redirect('blog_admin_index');
-            }
-            $errors = $validator->getErrors();
-            $params['id'] = $item->getId();
-            $item = $params;
-        }
-        return $this->renderer->render('@blog/admin/posts/edit', [
-            'item' => $item,
-            'errors' => $errors ?? ''
-        ]);
-    }
-
-    public function delete(Request $request)
-    {
-        $this->postRepository->delete($request->getAttribute('id'));
-        $this->flash->addFlash('error', "L'article a bien été supprimé");
-        return $this->redirect('blog_admin_index');
-    }
-
-    /**
-     * Filtre les paramètres reçu par la requête
-     *
-     * @param  Request $request
-     * @return array
-     */
-    public function prePersist(Request $request): array
+    protected function prePersist(Request $request): array
     {
         $params = array_filter($request->getParsedBody(), function ($key) {
-            return in_array($key, ['name', 'slug', 'content', 'created_at']);
+            return in_array($key, ['name', 'slug', 'content', 'cretaed_at', 'category_id']);
         }, ARRAY_FILTER_USE_KEY);
-        return array_merge($params, [
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+
+        return array_merge($params, ['updated_at' => date('Y-m-d H:i:s')]);
     }
 
-    public function getValidator(Request $request)
+
+    protected function getValidator(Request $request)
     {
-        return (new Validator($request->getParsedBody()))
-            ->required('name', 'slug', 'content')
+        return parent::getValidator($request)
+            ->required('content', 'name', 'slug', 'created_at')
             ->length('content', 10)
-            ->length('name', 2, 255)
-            ->length('slug', 2, 50)
-            ->slug('slug');
+            ->length('name', 2, 250)
+            ->exists('category_id', $this->categoryRepository->getTable(), $this->categoryRepository->getPdo())
+            ->dateTime('created_at');
     }
 }

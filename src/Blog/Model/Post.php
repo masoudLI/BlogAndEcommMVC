@@ -15,17 +15,17 @@ class Post
     /**
      * @var string
      */
-    private string $name;
+    private ?string $name = null;
 
     /**
      * @var string
      */
-    private string $slug;
+    private ?string $slug = null;
 
     /**
      * @var string
      */
-    private string $content;
+    private ?string $content = null;
 
     /**
      * @var
@@ -36,6 +36,11 @@ class Post
      * @var
      */
     private $updated_at;
+
+    /**
+     * @var Category
+     */
+    private $category;
 
     /**
      * Get the value of id
@@ -78,7 +83,7 @@ class Post
      *
      * @return  self
      */
-    public function setName(string $name)
+    public function setName(?string $name)
     {
         $this->name = $name;
 
@@ -102,7 +107,7 @@ class Post
      *
      * @return  self
      */
-    public function setSlug(string $slug)
+    public function setSlug(?string $slug)
     {
         $this->slug = $slug;
 
@@ -126,7 +131,7 @@ class Post
      *
      * @return  self
      */
-    public function setContent(string $content)
+    public function setContent(?string $content)
     {
         $this->content = $content;
 
@@ -138,11 +143,9 @@ class Post
      *
      * @return  DateTime
      */
-    public function getCreated_at(): DateTime
+    public function getCreated_at()
     {
-        if (is_string($this->created_at)) {
-            return $this->created_at = new DateTime($this->created_at);
-        }
+        return $this->created_at;
     }
 
     /**
@@ -175,13 +178,33 @@ class Post
     /**
      * Set the value of updated_at
      *
-     * @param  DateTimeInterface  $updated_at
+     * @param  DateTime  $updated_at
      *
      * @return  self
      */
-    public function setUpdated_at(DateTimeInterface $updated_at)
+    public function setUpdated_at(DateTime $updated_at)
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of category
+     */ 
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * Set the value of category
+     *
+     * @return  self
+     */ 
+    public function setCategory($category)
+    {
+        $this->category = $category;
 
         return $this;
     }

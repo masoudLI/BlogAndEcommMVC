@@ -7,7 +7,7 @@ use Pagerfanta\Pagerfanta;
 use App\Framework\Database\PaginatedQuery;
 use Framework\Exceptions\NoRecordException;
 
-abstract class AbstractRepository
+class AbstractRepository
 {
 
     /**
@@ -40,7 +40,7 @@ abstract class AbstractRepository
     {
         $query = new PaginatedQuery(
             $this->pdo,
-            "SELECT * FROM {$this->table}",
+            $this->paginatedQuery(),
             "SELECT COUNT(id) FROM {$this->table}",
             $this->entity
         );
@@ -50,9 +50,21 @@ abstract class AbstractRepository
     }
 
 
-    protected function findPaginatedQuerylimit()
+    protected function paginatedQuery()
     {
         return "SELECT * FROM {$this->table}";
+    }
+
+
+    public function findList()
+    {
+        $results = $this->pdo->query("SELECT id, name FROM {$this->table}")
+            ->fetchAll(PDO::FETCH_NUM);
+        $lists = [];
+        foreach ($results as $result) {
+            $lists[$result[0]] = $result[1];
+        }
+        return $lists;
     }
 
 
@@ -121,8 +133,45 @@ abstract class AbstractRepository
         }, array_keys($params)));
     }
 
+    /**
+     * Vérifie qu'un enregistrement existe
+     *
+     * @param  int $id
+     * @return bool
+     */
+    public function exists(int $id): bool
+    {
+        $stat = $this->pdo->prepare("SELECT id FROM {$this->table} where id = :id");
+        $stat->execute(['id' => $id]);
+        return $stat->fetchColumn() !== false;
+    }
+
+    
+    /**
+     * getPdo
+     *
+     * @return PDO
+     */
     public function getPdo()
     {
         return $this->pdo;
+    }
+
+    /**
+     * Get the value of entity
+     */
+    public function getEntity()
+    {
+        return $this->entity;
+    }
+
+    /**
+     * Get nom de la table en BDD
+     *
+     * @return  string
+     */
+    public function getTable()
+    {
+        return $this->table;
     }
 }

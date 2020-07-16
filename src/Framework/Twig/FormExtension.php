@@ -36,10 +36,11 @@ class FormExtension extends AbstractExtension
         }
         if ($type === 'textarea') {
             $input = $this->textarea($value, $attributes);
+        } elseif ($options['options'] ?? []) {
+            $input = $this->select($value, $options['options'], $attributes);
         } elseif ($type === 'date') {
             $input = $this->date($value, $attributes);
-        }
-        else {
+        } else {
             $input = $this->input($value, $attributes);
         }
         return "<div class={$class}>
@@ -57,7 +58,7 @@ class FormExtension extends AbstractExtension
         return (string) $value;
     }
 
-    
+
     /**
      * input
      *
@@ -67,10 +68,10 @@ class FormExtension extends AbstractExtension
      */
     private function input(?string $value, array $attributes): string
     {
-        return "<input " . $this->getHtmlFormArray($attributes). " value=\"$value\">";
+        return "<input " . $this->getHtmlFormArray($attributes) . " value=\"$value\">";
     }
 
-    
+
     /**
      * textarea
      *
@@ -80,7 +81,7 @@ class FormExtension extends AbstractExtension
      */
     private function textarea(?string $value, array $attributes): string
     {
-        return "<textarea " . $this->getHtmlFormArray($attributes). ">$value</textarea>";
+        return "<textarea " . $this->getHtmlFormArray($attributes) . ">$value</textarea>";
     }
 
     /**
@@ -94,7 +95,7 @@ class FormExtension extends AbstractExtension
         return "<input class=\"\" " . $this->getHtmlFormArray($attributes) . " value=\"{$value}\">";
     }
 
-    
+
     /**
      * getErrorsHtml
      *
@@ -110,7 +111,23 @@ class FormExtension extends AbstractExtension
         }
         return "";
     }
-    
+
+    /**
+     * getErrorsHtml
+     *
+     * @param  mixed $context
+     * @param  mixed $key
+     * @return string
+     */
+    private function select(?string $value, array $options, $attributes)
+    {
+        $htmlOptions = array_reduce(array_keys($options), function (string $html, string $key) use ($options, $value) {
+            $params = ['value' => $key, 'selected' => $value === $key];
+            return $html . '<option ' . $this->getHtmlFormArray($params) . '>' . $options[$key] .'</option>';
+        }, "");
+        return "<select " . $this->getHtmlFormArray($attributes) . ">$htmlOptions</select>";
+    }
+
     /**
      * getHtmlFormArray
      *
@@ -119,18 +136,17 @@ class FormExtension extends AbstractExtension
      */
     public function getHtmlFormArray(array $attributes)
     {
-        /* $htmlParts = [];
+        $htmlParts = [];
         foreach ($attributes as $key => $value) {
-            dd($attributes);
             if ($value === true) {
                 $htmlParts[] = (string) $key;
             } elseif ($value !== false) {
                 $htmlParts[] = "$key=\"$value\"";
             }
-        } */
-
-        return implode(' ', array_map(function ($key, $value) {
+        } 
+        return implode(' ', $htmlParts);
+        /* return implode(' ', array_map(function ($key, $value) {
             return "$key=\"$value\"";
-        }, array_keys($attributes), $attributes));
+        }, array_keys($attributes), $attributes)); */
     }
 }

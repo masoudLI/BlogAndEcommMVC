@@ -13,8 +13,12 @@ class PostRepository extends AbstractRepository
     protected string $entity = Post::class;
 
 
-    protected function findPaginatedQuerylimit()
+    protected function paginatedQuery()
     {
-        return " ORDER BY created_at DESC";
+
+        return "SELECT p.id, p.name, p.created_at, c.name as category
+            FROM {$this->table} as p
+            LEFT JOIN categories as c ON p.category_id = c.id
+            ORDER BY created_at ASC";
     }
 }

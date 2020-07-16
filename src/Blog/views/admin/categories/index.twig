@@ -1,0 +1,45 @@
+{% extends '@admin/layout.twig' %}
+
+{% block title "Mes articles" %}
+
+{% block body %}
+
+<p class="text-right">
+    <a href="{{ path(routePrefix ~ '_create') }}" class="btn btn-primary">
+        Ajouter un category
+    </a>
+</p>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Titre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td><a href="{{path(routePrefix ~ '_edit', {id: item.id})}}">Editer</a></td>
+                <td>
+                    <form action="{{path(routePrefix ~ '_delete', {id: item.id})}}" onsubmit="return confirm('etes vous sur ?')" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="btn btn-danger">Supprimer</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<ul class="pagerfanta">
+    {{paginate(items, 'blog_admin_category_index')}}
+</ul>
+
+{% endblock %}

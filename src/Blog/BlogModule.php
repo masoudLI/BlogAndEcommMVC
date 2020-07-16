@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Blog;
 
+use App\Blog\Actions\CategoryCrudAction;
 use App\Blog\Actions\PostCrudAction;
 use App\Blog\Actions\PagePostIndex;
 use Framework\Module;
@@ -31,16 +32,31 @@ class BlogModule extends Module
 
         if ($container->has('admin')) {
             $prefixAdmin = $container->get('admin');
-            $router->get('blog_admin_index', $prefixAdmin, PostCrudAction::class, []);
-            $router->get('blog_admin_edit', $prefixAdmin . '/edit/{id}', PostCrudAction::class, [
+            $router->get('blog_admin_posts_index', $prefixAdmin . '/posts', PostCrudAction::class, []);
+            $router->get('blog_admin_posts_edit', $prefixAdmin . '/posts/edit/{id}', PostCrudAction::class, [
                 'id' => '[0-9]+'
             ]);
-            $router->post(null, $prefixAdmin . '/edit/{id}', PostCrudAction::class, [
+            $router->post(null, $prefixAdmin . '/posts/edit/{id}', PostCrudAction::class, [
                 'id' => '[0-9]+'
             ]);
-            $router->get('blog_admin_create', $prefixAdmin . '/create', PostCrudAction::class, []);
-            $router->post(null, $prefixAdmin . '/create', PostCrudAction::class, []);
-            $router->delete('blog_admin_delete', $prefixAdmin . '/delete/{id}', PostCrudAction::class, [
+            $router->get('blog_admin_posts_create', $prefixAdmin . '/posts/create', PostCrudAction::class, []);
+            $router->post(null, $prefixAdmin . '/posts/create', PostCrudAction::class, []);
+            $router->delete('blog_admin_posts_delete', $prefixAdmin . '/posts/delete/{id}', PostCrudAction::class, [
+                'id' => '[0-9]+'
+            ]);
+
+            // categories
+
+            $router->get('blog_admin_category_index', $prefixAdmin . '/category', CategoryCrudAction::class, []);
+            $router->get('blog_admin_category_edit', $prefixAdmin . '/category/edit/{id}', CategoryCrudAction::class, [
+                'id' => '[0-9]+'
+            ]);
+            $router->post(null, $prefixAdmin . '/category/edit/{id}', CategoryCrudAction::class, [
+                'id' => '[0-9]+'
+            ]);
+            $router->get('blog_admin_category_create', $prefixAdmin . '/category/create', CategoryCrudAction::class, []);
+            $router->post(null, $prefixAdmin . '/category/create', CategoryCrudAction::class, []);
+            $router->delete('blog_admin_category_delete', $prefixAdmin . '/category/delete/{id}', CategoryCrudAction::class, [
                 'id' => '[0-9]+'
             ]);
         }

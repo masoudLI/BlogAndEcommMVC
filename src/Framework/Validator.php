@@ -3,9 +3,11 @@
 namespace Framework;
 
 use DateTime;
+use Framework\Database\AbstractRepository;
 use Framework\Database\Table;
 use Framework\Validator\ValidationError;
 use Framework\Validator\ValidatorError;
+use PDO;
 
 class Validator
 {
@@ -145,7 +147,14 @@ class Validator
         }
         return $this;
     }
-
+    
+    /**
+     * dateTime
+     *
+     * @param  mixed $key
+     * @param  mixed $format
+     * @return self
+     */
     public function dateTime(string $key, $format = "Y-m-d H:i:s"): self
     {
         $value = $this->getValue($key);
@@ -157,7 +166,13 @@ class Validator
         return $this;
     }
 
-
+    
+    /**
+     * time
+     *
+     * @param  mixed $key
+     * @return self
+     */
     public function time(string $key): self
     {
         $value = $this->getValue($key);
@@ -167,7 +182,14 @@ class Validator
         }
         return $this;
     }
-
+    
+    /**
+     * beforeTime
+     *
+     * @param  mixed $startField
+     * @param  mixed $endField
+     * @return self
+     */
     public function beforeTime(string $startField, string $endField): self
     {
         $valueStart = $this->getValue($startField);
@@ -180,6 +202,26 @@ class Validator
                 return $this;
             }
             return $this;
+        }
+        return $this;
+    }
+
+    
+    /**
+     * existe
+     *
+     * @param  mixed $key
+     * @param  mixed $table
+     * @param  mixed $pdo
+     * @return self
+     */
+    public function exists(string $key, string $table, \PDO $pdo): self
+    {
+        $value = $this->getValue($key);
+        $statement = $pdo->prepare("SELECT id FROM $table WHERE id = ?");
+        $statement->execute([$value]);
+        if ($statement->fetchColumn() === false) {
+            $this->addError($key, 'exists', [$table]);
         }
         return $this;
     }

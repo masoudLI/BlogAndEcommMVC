@@ -4,44 +4,48 @@
 
 {% block body %}
 
-<p class="text-right">
-    <a href="{{ path('blog_admin_create') }}" class="btn btn-primary">
-        Ajouter un article
-    </a>
-</p>
+	<p class="text-right">
+		<a href="{{ path(routePrefix ~ '_create') }}" class="btn btn-primary">
+			Ajouter un article
+		</a>
+	</p>
 
-<div class="row">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Titre</th>
-                <th>Date de Creation</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>{{item.id}}</td>
-                <td>{{item.name}}</td>
-                <td>{{item.created_at.format('Y-m-d')}}</td>
-                <td><a href="{{path('blog_admin_edit', {id: item.id})}}">Editer</a></td>
-                <td>
-                    <form action="{{path('blog_admin_delete', {id: item.id})}}" onsubmit="return confirm('etes vous sur ?')" method="POST">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <button class="btn btn-danger">Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+	<div class="row">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Titre</th>
+					<th>Date de Creation</th>
+					<th>Category</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for item in items %}
+					<tr>
+						<td>{{item.id}}</td>
+						<td>{{item.name}}</td>
+						<td>{{item.created_at}}</td>
+						<td>{{item.category}}</td>
+						<td>
+							<a href="{{path(routePrefix ~ '_edit', {id: item.id})}}">Editer</a>
+						</td>
+						<td>
+							<form action="{{path(routePrefix ~ '_delete', {id: item.id})}}" onsubmit="return confirm('etes vous sur ?')" method="POST">
+								<input type="hidden" name="_method" value="DELETE">
+								<button class="btn btn-danger">Supprimer</button>
+							</form>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 
 
-<ul class="pagerfanta">
-    {{paginate(items, 'blog_admin_index')}}
-</ul>
+	<ul class="pagerfanta">
+		{{paginate(items, 'blog_admin_posts_index')}}
+	</ul>
 
 {% endblock %}
