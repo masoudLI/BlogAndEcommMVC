@@ -59,7 +59,7 @@ class PagePostIndex
     public function show(Request $request)
     {
         $id = $request->getAttribute('id');
-        $post = $this->postRepository->find($id);
+        $post = $this->postRepository->findWithCategory($id);
         $slug = $request->getAttribute('slug');
 
         if ($slug !== $post->getSlug()) {

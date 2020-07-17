@@ -6,29 +6,33 @@ use App\Admin\AdminModule;
 use App\Blog\Actions\PagePostIndex;
 use Framework\App;
 use App\Blog\BlogModule;
-use App\Error\ModuleError;
+use Framework\Middleware\DispatcherMiddleware;
+use Framework\Middleware\MethodMiddleware;
+use Framework\Middleware\NotFoundMiddleware;
+use Framework\Middleware\RouterMiddleware;
 use GuzzleHttp\Psr7\ServerRequest;
-use Framework\Renderer\TwigRenderer;
 use Framework\Router;
+use Framework\Middleware\TrailingSlashMiddleware;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$modules = [
-    AdminModule::class,
-    BlogModule::class
-];
 
-$builder = new \DI\ContainerBuilder();
-$builder->addDefinitions('config/config.php');
-foreach ($modules as $module) {
-    if ($module::DEFINITIONS) {
-        $builder->addDefinitions($module::DEFINITIONS);
-    }
-}
-$container = $builder->build();
-$app = new App($container, $modules);
+$app = (new App('config/config.php'))
+    ->addModule(AdminModule::class)
+    ->addModule(BlogModule::class);
+
 $app->getContainer()->get(Router::class)->get('home', '/', PagePostIndex::class, []);
+
+// middleware
+$app
+    ->pipe(\Franzl\Middleware\Whoops\WhoopsMiddleware::class)
+    ->pipe(TrailingSlashMiddleware::class)
+    ->pipe(MethodMiddleware::class)
+    ->pipe(RouterMiddleware::class)
+    ->pipe(DispatcherMiddleware::class)
+    ->pipe(NotFoundMiddleware::class);
+
 
 if (php_sapi_name() !== 'cli') {
     $response = $app->run(ServerRequest::fromGlobals());

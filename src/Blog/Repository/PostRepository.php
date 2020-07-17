@@ -54,6 +54,17 @@ class PostRepository extends AbstractRepository
     }
 
 
+    public function findWithCategory(int $id)
+    {
+        return $this->fetchOrFail(
+            "SELECT p.*, c.id as categoryId, c.name as categoryName, c.slug as categorySlug
+                FROM {$this->table} as p
+                LEFT JOIN categories as c ON p.category_id = c.id
+                WHERE p.id = :id"
+        , ['id' => $id]);
+    }
+
+
     protected function paginatedQuery()
     {
         return "SELECT p.id, p.name, p.created_at, c.name as category
