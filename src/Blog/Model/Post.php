@@ -30,12 +30,12 @@ class Post
     /**
      * @var
      */
-    private $created_at;
+    private $created_at = null;
 
     /**
      * @var
      */
-    private $updated_at;
+    private $updated_at = null;
 
     /**
      * @var Category
@@ -158,7 +158,7 @@ class Post
      *
      * @return  self
      */
-    public function setCreated_at(DateTime $created_at)
+    public function setCreated_at(?DateTime $created_at)
     {
         if (is_string($created_at)) {
             $this->created_at = new DateTime($created_at);
@@ -185,7 +185,7 @@ class Post
      *
      * @return  self
      */
-    public function setUpdated_at(DateTime $updated_at)
+    public function setUpdated_at(?DateTime $updated_at)
     {
         $this->updated_at = $updated_at;
 

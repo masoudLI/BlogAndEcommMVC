@@ -1,19 +1,23 @@
 <?php
 
+use Framework\Middleware\CsrfMiddleware;
 use Framework\Renderer\RendererInterface;
 use Framework\Renderer\TwigRendererFactory;
 use Framework\Router;
 use Framework\Router\RouterTwigExtension;
 use Framework\Session\PHPSession;
 use Framework\Session\SessionInterface;
-use Framework\Twig\FlashExtension;
-use Framework\Twig\FormExtension;
-use Framework\Twig\PagerFantaExtension;
-use Framework\Twig\TextExtension;
-use Framework\Twig\TimeExtension;
 use Psr\Container\ContainerInterface;
+use Framework\Twig\{
+    CsrfExtension,
+    FlashExtension,
+    FormExtension,
+    PagerFantaExtension,
+    TextExtension,
+    TimeExtension
+};
 
-use function DI\{create, factory, get};
+use function DI\{autowire, create, factory, get};
 
 
 return [
@@ -28,11 +32,13 @@ return [
         get(TextExtension::class),
         get(TimeExtension::class),
         get(FlashExtension::class),
-        get(FormExtension::class)
+        get(FormExtension::class),
+        get(CsrfExtension::class)
     ],
     RendererInterface::class => factory(TwigRendererFactory::class),
     Router::class => create(),
     SessionInterface::class => create(PHPSession::class),
+    CsrfMiddleware::class => autowire()->constructor(get(SessionInterface::class)),
     \PDO::class => function (ContainerInterface $c) {
         return new PDO(
             'mysql:host=' . $c->get('database.host') . ';dbname=' . $c->get('database.name'),

@@ -7,7 +7,7 @@
 <h1>{{ post.name }}</h1>
 
 {% if post.categoryId %}
-<a href="{{path('blog_category_index', {slug: post.categorySlug})}}" class="item">{{post.categoryName}}</a>
+<a href="{{path('blog_category_index', {slug: post.categorySlug, id: post.id})}}" class="item">{{post.categoryName}}</a>
 {% endif %}
 
 <p class="text-muted">{{ post.created_at | ago }}</p>

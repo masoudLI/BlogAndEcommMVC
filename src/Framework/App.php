@@ -155,4 +155,12 @@ class App implements Handler
         }
         return $this->container;
     }
+
+    /**
+     * Get the value of modules
+     */ 
+    public function getModules()
+    {
+        return $this->modules;
+    }
 }

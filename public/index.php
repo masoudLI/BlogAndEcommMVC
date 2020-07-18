@@ -6,6 +6,7 @@ use App\Admin\AdminModule;
 use App\Blog\Actions\PagePostIndex;
 use Framework\App;
 use App\Blog\BlogModule;
+use Framework\Middleware\CsrfMiddleware;
 use Framework\Middleware\DispatcherMiddleware;
 use Framework\Middleware\MethodMiddleware;
 use Framework\Middleware\NotFoundMiddleware;
@@ -29,6 +30,7 @@ $app
     ->pipe(\Franzl\Middleware\Whoops\WhoopsMiddleware::class)
     ->pipe(TrailingSlashMiddleware::class)
     ->pipe(MethodMiddleware::class)
+    ->pipe(CsrfMiddleware::class)
     ->pipe(RouterMiddleware::class)
     ->pipe(DispatcherMiddleware::class)
     ->pipe(NotFoundMiddleware::class);
