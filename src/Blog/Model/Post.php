@@ -3,6 +3,7 @@
 namespace App\Blog\Model;
 
 use DateTime;
+use DateTimeInterface;
 
 class Post
 {
@@ -30,17 +31,20 @@ class Post
     /**
      * @var
      */
-    private $created_at = null;
+    private ?DateTime $createdAt = null;
 
     /**
      * @var
      */
-    private $updated_at = null;
+    private ?DateTime $updatedAt = null;
 
     /**
      * @var Category
      */
     private $category;
+    
+
+    private $image;
 
     /**
      * Get the value of id
@@ -139,31 +143,28 @@ class Post
     }
 
     /**
-     * Get the value of created_at
+     * Get the value of createdAt
      *
      * @return  DateTime
      */
-    public function getCreated_at()
+    public function getCreatedAt()
     {
-        if (is_string($this->created_at)) {
-            return $this->created_at = new DateTime($this->created_at);
-        }
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     /**
-     * Set the value of created_at
+     * Set the value of createdAt
      *
-     * @param  DateTime  $created_at
+     * @param  DateTime  $createdAt
      *
      * @return  self
      */
-    public function setCreated_at(?DateTime $created_at)
+    public function setCreatedAt(?DateTime $datetime): self
     {
-        if (is_string($created_at)) {
-            $this->created_at = new DateTime($created_at);
+        if (is_string($datetime)) {
+            $this->createdAt = new DateTime($datetime);
         } else {
-            $this->created_at = $created_at;
+            $this->createdAt = $datetime;
         }
         return $this;
     }
@@ -171,11 +172,11 @@ class Post
     /**
      * Get the value of updated_at
      *
-     * @return  DateTimeInterface
+     * @return  DateTime
      */
-    public function getUpdated_at()
+    public function getUpdatedAt()
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
     /**
@@ -185,16 +186,19 @@ class Post
      *
      * @return  self
      */
-    public function setUpdated_at(?DateTime $updated_at)
+    public function setUpdatedAt(?DateTime $datetime)
     {
-        $this->updated_at = $updated_at;
-
+        if (is_string($datetime)) {
+            $this->updatedAt = new DateTime($datetime);
+        } else {
+            $this->updatedAt = $datetime;
+        }
         return $this;
     }
 
     /**
      * Get the value of category
-     */ 
+     */
     public function getCategory()
     {
         return $this->category;
@@ -204,11 +208,43 @@ class Post
      * Set the value of category
      *
      * @return  self
-     */ 
+     */
     public function setCategory($category)
     {
         $this->category = $category;
 
         return $this;
+    }
+
+    /**
+     * Get the value of image
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Set the value of image
+     *
+     * @return  self
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getThumb()
+    {
+        ['filename' => $filename, 'extension' => $extension] = pathinfo($this->getImage());
+        return '/uploads/posts/' . $filename . '_small.' . $extension;
+    }
+
+
+    public function getImageUrl()
+    {
+        return "/uploads/posts" . $this->getImage();
     }
 }

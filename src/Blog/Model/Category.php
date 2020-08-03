@@ -2,7 +2,6 @@
 
 namespace App\Blog\Model;
 
-
 class Category
 {
 

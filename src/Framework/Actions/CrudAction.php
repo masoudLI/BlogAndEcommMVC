@@ -101,7 +101,7 @@ class CrudAction
     {
         $item = $this->getNewEntity();
         if ($request->getMethod() === 'POST') {
-            $params = $this->prePersist($request);
+            $params = $this->prePersist($request, $item);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
                 $this->abstractRepository->insert($params);
@@ -111,8 +111,9 @@ class CrudAction
             $item = $params;
             $errors = $validator->getErrors();
         }
-        return $this->renderer->render($this->viewPath . '/create',
-        $this->formParams([
+        return $this->renderer->render(
+            $this->viewPath . '/create',
+            $this->formParams([
                 'errors' => $errors ?? '',
                 'item' => $item
             ])
@@ -124,7 +125,7 @@ class CrudAction
         $id = (int)$request->getAttribute('id');
         $item = $this->abstractRepository->find($id);
         if ($request->getMethod() === 'POST') {
-            $params = $this->prePersist($request);
+            $params = $this->prePersist($request, $item);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
                 $this->abstractRepository->update($id, $params);
@@ -135,11 +136,13 @@ class CrudAction
             $params['id'] = $item->getId();
             $item = $params;
         }
-        return $this->renderer->render($this->viewPath . '/edit',
-        $this->formParams([
+        return $this->renderer->render(
+            $this->viewPath . '/edit',
+            $this->formParams([
             'errors' => $errors ?? '',
             'item' => $item
-        ]));
+            ])
+        );
     }
 
     public function delete(Request $request)
@@ -166,9 +169,9 @@ class CrudAction
      * @param  Request $request
      * @return array
      */
-    protected function prePersist(Request $request): array
+    protected function prePersist(Request $request, $item): array
     {
-        return array_filter($request->getParsedBody(), function ($key) {
+        return array_filter((array)array_merge($request->getParsedBody(), $request->getUploadedFiles()), function ($key) {
             return in_array($key, []);
         }, ARRAY_FILTER_USE_KEY);
     }
@@ -182,7 +185,7 @@ class CrudAction
      */
     protected function getValidator(Request $request)
     {
-        return new Validator($request->getParsedBody());
+        return new Validator(array_merge($request->getParsedBody(), $request->getUploadedFiles()));
     }
 
     /**

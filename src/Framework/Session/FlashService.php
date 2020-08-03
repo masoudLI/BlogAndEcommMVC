@@ -41,7 +41,8 @@ class FlashService
         $this->session->set(self::SESSION_KEY, $flash);
     }
 
-    public function addFlash (string $type, string $message) {
+    public function addFlash(string $type, string $message)
+    {
         $flash = $this->session->get(self::SESSION_KEY, []);
         if ($type === 'success') {
             $flash['success'] = $message;

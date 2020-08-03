@@ -11,5 +11,4 @@ class CategoryRepository extends AbstractRepository
     protected string $table = 'categories';
 
     protected string $entity = Category::class;
-
 }

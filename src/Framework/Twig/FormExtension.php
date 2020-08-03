@@ -40,6 +40,8 @@ class FormExtension extends AbstractExtension
             $input = $this->select($value, $options['options'], $attributes);
         } elseif ($type === 'date') {
             $input = $this->date($value, $attributes);
+        } elseif ($type === 'file') {
+            $input = $this->file($attributes);
         } else {
             $input = $this->input($value, $attributes);
         }
@@ -92,7 +94,13 @@ class FormExtension extends AbstractExtension
      */
     private function date(?string $value, array $attributes): string
     {
-        return "<input class=\"\" " . $this->getHtmlFormArray($attributes) . " value=\"{$value}\">";
+        return "<input type=\"text\" class=\"\" " . $this->getHtmlFormArray($attributes) . " value=\"{$value}\">";
+    }
+
+
+    private function file(array $attributes): string
+    {
+        return "<input type=\"file\" class=\"\" " . $this->getHtmlFormArray($attributes) . ">";
     }
 
 
@@ -143,7 +151,7 @@ class FormExtension extends AbstractExtension
             } elseif ($value !== false) {
                 $htmlParts[] = "$key=\"$value\"";
             }
-        } 
+        }
         return implode(' ', $htmlParts);
         /* return implode(' ', array_map(function ($key, $value) {
             return "$key=\"$value\"";

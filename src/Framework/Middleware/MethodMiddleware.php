@@ -13,8 +13,7 @@ class MethodMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $parsedBody = (array)$request->getParsedBody();
-        if (
-            array_key_exists('_method', $parsedBody) &&
+        if (array_key_exists('_method', $parsedBody) &&
             in_array($parsedBody['_method'], ['DELETE', 'PUT'])
         ) {
             $request = $request->withMethod($parsedBody['_method']);

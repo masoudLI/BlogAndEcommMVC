@@ -34,6 +34,6 @@ class DispatcherMiddleware
             return $response;
         } else {
             throw new \Exception("The response is not string Or an instance of ResponseInterface");
-        } 
+        }
     }
 }

@@ -6,7 +6,7 @@
 
 <h1>Créer l'article</h1>
 
-<form action="{{ path(routePrefix ~ '_create') }}" method="post">
+<form action="{{ path(routePrefix ~ '_create') }}" method="post" enctype="multipart/form-data">
     {% include viewPath ~ '/_form.twig' %}
     <button class="btn btn-primary" type="submit">Créer</button>
 </form>

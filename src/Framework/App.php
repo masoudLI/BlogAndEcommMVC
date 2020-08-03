@@ -158,7 +158,7 @@ class App implements Handler
 
     /**
      * Get the value of modules
-     */ 
+     */
     public function getModules()
     {
         return $this->modules;

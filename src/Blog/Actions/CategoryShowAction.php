@@ -9,7 +9,6 @@ use Framework\Renderer\RendererInterface;
 use Framework\Router;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-
 class CategoryShowAction
 {
 
@@ -28,7 +27,6 @@ class CategoryShowAction
     use RouterAwareAction;
 
     public function __construct(RendererInterface $renderer, PostRepository $postRepository, Router $router, CategoryRepository $categoryReposit)
-
     {
         $this->renderer = $renderer;
         $this->postRepository = $postRepository;

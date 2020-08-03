@@ -17,6 +17,8 @@ class Validator
         'pdf' => 'application/pdf'
     ];
 
+    private const MIME_SIZE = 50000;
+
     /**
      * @var array
      */
@@ -73,8 +75,7 @@ class Validator
     {
         $value = $this->getValue($key);
         $length = mb_strlen($value);
-        if (
-            !is_null($min) &&
+        if (!is_null($min) &&
             !is_null($max) &&
             ($length < $min || $length > $max)
         ) {
@@ -147,7 +148,63 @@ class Validator
         }
         return $this;
     }
-    
+
+
+    /**
+     * uploded
+     *
+     * @param  mixed $key
+     * @return self
+     */
+    public function uploaded(string $key): self
+    {
+        $file = $this->getValue($key);
+        if ($file === null || $file->getError() !== UPLOAD_ERR_OK) {
+            $this->addError($key, 'uploaded');
+        }
+        return $this;
+    }
+
+
+    /**
+     * FunctionName
+     *
+     * @param  mixed $key
+     * @param  mixed $extension
+     * @return void
+     */
+    public function extension(string $key, array $extensions): self
+    {
+        $file = $this->getValue($key);
+        if ($file !== null && $file->getError() === UPLOAD_ERR_OK) {
+            $type = $file->getClientMediaType();
+            $extension = mb_strtolower(pathinfo($file->getClientFilename(), PATHINFO_EXTENSION));
+            $extensionType = self::MIME_TYPES[$extension] ?? null;
+            if (!in_array($extension, $extensions) || $extensionType !== $type) {
+                $this->addError($key, 'filetype', [join(',', $extensions)]);
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * FunctionName
+     *
+     * @param  mixed $key
+     * @param  mixed $extension
+     * @return void
+     */
+    public function size(string $key): self
+    {
+        $file = $this->getValue($key);
+        $size = $file->getSize();
+        if ($size > self::MIME_SIZE) {
+            $this->addError($key, 'size');
+        }
+
+        return $this;
+    }
+
     /**
      * dateTime
      *
@@ -166,7 +223,7 @@ class Validator
         return $this;
     }
 
-    
+
     /**
      * time
      *
@@ -182,7 +239,7 @@ class Validator
         }
         return $this;
     }
-    
+
     /**
      * beforeTime
      *
@@ -206,7 +263,7 @@ class Validator
         return $this;
     }
 
-    
+
     /**
      * existe
      *

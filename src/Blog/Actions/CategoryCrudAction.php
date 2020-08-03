@@ -23,7 +23,7 @@ class CategoryCrudAction extends CrudAction
         Router $router,
         FlashService $flash
     ) {
-        parent::__construct($renderer, $categoryRepository , $router, $flash);
+        parent::__construct($renderer, $categoryRepository, $router, $flash);
     }
 
     protected function prePersist(Request $request): array
@@ -31,7 +31,6 @@ class CategoryCrudAction extends CrudAction
         return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, ['name', 'slug']);
         }, ARRAY_FILTER_USE_KEY);
-
     }
 
     protected function getValidator(Request $request)

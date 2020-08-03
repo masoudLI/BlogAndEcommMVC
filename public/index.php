@@ -30,7 +30,7 @@ $app
     ->pipe(\Franzl\Middleware\Whoops\WhoopsMiddleware::class)
     ->pipe(TrailingSlashMiddleware::class)
     ->pipe(MethodMiddleware::class)
-    ->pipe(CsrfMiddleware::class)
+    //->pipe(CsrfMiddleware::class)
     ->pipe(RouterMiddleware::class)
     ->pipe(DispatcherMiddleware::class)
     ->pipe(NotFoundMiddleware::class);

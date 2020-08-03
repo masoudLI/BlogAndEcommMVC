@@ -15,7 +15,7 @@ class FlashExtension extends AbstractExtension
         $this->flash = $flash;
     }
 
-    public function getFunctions (): array 
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('flash', [$this, 'getFlash'])
