@@ -26,7 +26,7 @@ class PostRepositoryTest extends DatabaseTestCase
     public function testFind()
     {
         $this->seedDatabase($this->postTable->getPdo());
-        $post = $this->postTable->find(1);
+        $post = $this->postTable->find(55);
         $this->assertInstanceOf(Post::class, $post);
     }
 

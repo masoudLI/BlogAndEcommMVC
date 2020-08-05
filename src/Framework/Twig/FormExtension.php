@@ -22,8 +22,8 @@ class FormExtension extends AbstractExtension
     {
         $type = $options['type'] ?? 'text';
         $error = $this->getErrorsHtml($context, $key);
-        $value = $this->convertValue($value);
         $class = "form-group";
+        $value = $this->convertValue($value);
         $attributes = array_merge([
             'class' => 'form-control ' . ($options['class'] ?? ''),
             'id' => $key,
@@ -38,7 +38,9 @@ class FormExtension extends AbstractExtension
             $input = $this->textarea($value, $attributes);
         } elseif ($options['options'] ?? []) {
             $input = $this->select($value, $options['options'], $attributes);
-        } elseif ($type === 'date') {
+        } elseif ($type === 'checkbox') {
+            $input = $this->checkbox($value, $attributes);
+        }elseif ($type === 'date') {
             $input = $this->date($value, $attributes);
         } elseif ($type === 'file') {
             $input = $this->file($attributes);
@@ -55,9 +57,9 @@ class FormExtension extends AbstractExtension
     private function convertValue($value): string
     {
         if ($value instanceof \DateTime) {
-            $value->format('Y/m/d H:i:s');
+            return $value->format('Y-m-d H:i:s');
         }
-        return (string) $value;
+        return (string)$value;
     }
 
 
@@ -70,7 +72,7 @@ class FormExtension extends AbstractExtension
      */
     private function input(?string $value, array $attributes): string
     {
-        return "<input " . $this->getHtmlFormArray($attributes) . " value=\"$value\">";
+        return "<input type=\"text\" ". $this->getHtmlFormArray($attributes) . " value=\"$value\">";
     }
 
 
@@ -86,6 +88,22 @@ class FormExtension extends AbstractExtension
         return "<textarea " . $this->getHtmlFormArray($attributes) . ">$value</textarea>";
     }
 
+
+    /**
+     * Génère un <input type="checkbox">
+     * @param null|string $value
+     * @param array $attributes
+     * @return string
+     */
+    private function checkbox(?string $value, array $attributes): string
+    {
+        $html = '<input type="hidden" name="' . $attributes['name'] . '" value="0"/>';
+        if ($value) {
+            $attributes['checked'] = true;
+        }
+        return $html . "<input type=\"checkbox\" " . $this->getHtmlFormArray($attributes) . " value=\"1\">";
+    }
+
     /**
      * Génère un <input>
      * @param null|string $value
@@ -94,13 +112,13 @@ class FormExtension extends AbstractExtension
      */
     private function date(?string $value, array $attributes): string
     {
-        return "<input type=\"text\" class=\"\" " . $this->getHtmlFormArray($attributes) . " value=\"{$value}\">";
+        return "<input type=\"text\" " . $this->getHtmlFormArray($attributes) . " value=\"{$value}\">";
     }
 
 
     private function file(array $attributes): string
     {
-        return "<input type=\"file\" class=\"\" " . $this->getHtmlFormArray($attributes) . ">";
+        return "<input type=\"file\" " . $this->getHtmlFormArray($attributes) . ">";
     }
 
 

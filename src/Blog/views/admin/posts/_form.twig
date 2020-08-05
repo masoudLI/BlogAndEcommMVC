@@ -1,10 +1,11 @@
 {{csrf_input()}}
-{{field('name', item.name, 'Titre de l\'article')}}
-{{field('slug', item.slug, 'Slug de l\'article')}}
+{{ field('name', item.name, 'Titre de l\'article') }}
+{{ field('category_id', item.categoryId, 'Categorie de l\'article', {options: categories}) }}
+{{ field('slug', item.slug, 'Slug de l\'article') }}
 {% if item.image %}
-	<img src="{{ item.imageUrl }}" alt="">
+<img src="{{ item.thumb }}" alt="">
 {% endif %}
-{{field('image', item.slug, 'Image', {type: 'file'}) }}
-{{field('content', item.content, 'Contenu', {type: 'textarea'})}}
-{{field('created_at', item.created_at.format('Y/m/d H:i:s'), 'Date de création', {class: 'datepicker'})}}
-{{field('category_id', item.category, 'Les categories', {options: categories})}}
+{{ field('image', item.slug, 'Image', {type: 'file'}) }}
+{{ field('published', item.published, 'En ligne', {type: 'checkbox'}) }}
+{{ field('content', item.content, 'Slug de l\'article', {type: 'textarea'}) }}
+{{ field('created_at', item.createdAt.format('d F Y H:i'), 'Date de l\'article', {class: 'datepicker'}) }}

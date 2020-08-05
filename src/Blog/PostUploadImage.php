@@ -9,5 +9,7 @@ class PostUploadImage extends UploadImage
 
     protected $path = "public/uploads/posts";
 
-    protected array $formats = [];
+    protected array $formats = [
+        'small' => ['318', '118']
+    ];
 }

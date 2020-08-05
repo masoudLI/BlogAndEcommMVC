@@ -23,17 +23,20 @@ class PostCrudAction extends CrudAction
 
     private $postUploadImage;
 
+    private $repository;
+
     public function __construct(
         RendererInterface $renderer,
-        PostRepository $postRepository,
+        PostRepository $repository,
         Router $router,
         FlashService $flash,
         CategoryRepository $categoryRepository,
         PostUploadImage $postUploadImage
     ) {
-        parent::__construct($renderer, $postRepository, $router, $flash);
+        parent::__construct($renderer, $repository, $router, $flash);
         $this->categoryRepository = $categoryRepository;
         $this->postUploadImage = $postUploadImage;
+        $this->repository = $repository;
     }
 
     protected function formParams(array $params): array
@@ -49,6 +52,13 @@ class PostCrudAction extends CrudAction
         return $post;
     }
 
+    protected function delete(Request $request)
+    {
+        $post = $this->repository->find($request->getAttribute('id'));
+        $this->postUploadImage->delete($post->getImage());
+        return parent::delete($request);
+    }
+
     protected function prePersist(Request $request, $post): array
     {
         $params = array_merge($request->getParsedBody(), $request->getUploadedFiles());
@@ -60,9 +70,8 @@ class PostCrudAction extends CrudAction
             unset($params['image']);
         }
         $params = array_filter($params, function ($key) {
-            return in_array($key, ['name', 'slug', 'content', 'cretaed_at', 'category_id', 'image']);
+            return in_array($key, ['name', 'slug', 'content', 'created_at', 'category_id', 'image', 'published']);
         }, ARRAY_FILTER_USE_KEY);
-
         return array_merge($params, ['updated_at' => date('Y-m-d H:i:s')]);
     }
 
@@ -75,7 +84,7 @@ class PostCrudAction extends CrudAction
             ->length('name', 2, 250)
             ->exists('category_id', $this->categoryRepository->getTable(), $this->categoryRepository->getPdo())
             ->dateTime('created_at')
-            ->extension('image', ['jpg', 'png']);
+            ->extension('image', ['jpg', 'png', 'jpeg']);
         if (is_null($request->getAttribute('id'))) {
             $validator->uploaded('image');
         }

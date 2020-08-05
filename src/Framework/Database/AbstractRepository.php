@@ -36,7 +36,7 @@ class AbstractRepository
     }
 
 
-    public function findPaginated(int $maxPerPage, int $currentPage): Pagerfanta
+    /* public function findPaginated(int $maxPerPage, int $currentPage): Pagerfanta
     {
         $query = new PaginatedQuery(
             $this->pdo,
@@ -47,7 +47,7 @@ class AbstractRepository
         return (new Pagerfanta($query))
             ->setMaxPerPage($maxPerPage)
             ->setCurrentPage($currentPage);
-    }
+    } */
 
 
     protected function paginatedQuery()
@@ -55,7 +55,7 @@ class AbstractRepository
         return "SELECT * FROM {$this->table}";
     }
 
-    
+
     /**
      * findList
      *
@@ -72,6 +72,36 @@ class AbstractRepository
         return $lists;
     }
 
+
+    public function makeQuery(): QueryBuilder
+    {
+        return (new QueryBuilder($this->pdo))
+            ->from($this->table, $this->table[0])
+            ->into($this->entity);
+    }
+
+
+    /**
+     * findAll
+     *
+     * @return array
+     */
+    public function findAll()
+    {
+        return $this->makeQuery()->fetchAll();
+    }
+
+    /**
+     * find
+     *
+     * @param  mixed $id
+     * @return void
+     */
+    public function find(int $id)
+    {
+        return $this->makeQuery()->where('id = :id')->setParams('id', $id)->fetchOrFail();
+    }
+
     /**
      * Récupère une ligne par rapport à un champs
      *
@@ -82,37 +112,23 @@ class AbstractRepository
      */
     public function findBy(string $field, string $value)
     {
-        return $this->fetchOrFail("SELECT * FROM {$this->table} WHERE $field = :field", ['field' => $value], $field);
+        return $this->makeQuery()
+            ->where("$field = :field")
+            ->setParams("field", $value)
+            ->fetchOrFail();
     }
 
-    
+   
     /**
-     * findAll
+     * count
      *
-     * @return array
-     */
-    public function findAll(): array
-    {
-        $query = $this->pdo->query("SELECT * FROM {$this->table}");
-        if ($this->entity) {
-            $query->setFetchMode(PDO::FETCH_CLASS, $this->entity);
-        } else {
-            $query->setFetchMode(PDO::FETCH_OBJ);
-        }
-        return $query->fetchAll();
-    }
-    
-    /**
-     * find
-     *
-     * @param  mixed $id
      * @return void
      */
-    public function find(int $id)
+    public function count()
     {
-        return $this->fetchOrFail("SELECT * FROM {$this->table} where id = :id", ['id' => $id]);
+        return $this->makeQuery()->count();
     }
-    
+
     /**
      * update
      *
@@ -127,7 +143,7 @@ class AbstractRepository
         $statement = $this->pdo->prepare("UPDATE {$this->table} SET $filedQuery where id = :id");
         return $statement->execute($params);
     }
-    
+
     /**
      * insert
      *
@@ -144,7 +160,7 @@ class AbstractRepository
         $statement = $this->pdo->prepare("INSERT INTO {$this->table} ($fields) VALUES ($values)");
         return $statement->execute($params);
     }
-    
+
     /**
      * delete
      *
@@ -156,7 +172,7 @@ class AbstractRepository
         $statement = $this->pdo->prepare("DELETE FROM $this->table where id = :id");
         return $statement->execute(['id' => $id]);
     }
-    
+
     /**
      * fetchOrFail
      *

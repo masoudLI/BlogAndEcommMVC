@@ -3,9 +3,8 @@
 namespace App\Blog\Repository;
 
 use App\Blog\Model\Post;
-use App\Framework\Database\PaginatedQuery;
 use Framework\Database\AbstractRepository;
-use Pagerfanta\Pagerfanta;
+use Framework\Database\QueryBuilder;
 
 class PostRepository extends AbstractRepository
 {
@@ -14,62 +13,37 @@ class PostRepository extends AbstractRepository
 
     protected string $entity = Post::class;
 
-    public function findPaginatedPublicForCategory(int $maxPerPage, int $currentPage, int $categoryId)
-    {
-        $query = new PaginatedQuery(
-            $this->pdo,
-            "SELECT p.*, c.name as categoryName, c.slug as categorySlug
-                FROM {$this->table} as p
-                LEFT JOIN categories as c ON p.category_id = c.id
-                WHERE p.category_id = :category_id
-                ORDER BY p.created_at DESC",
-            "SELECT COUNT(id) FROM {$this->table} WHERE category_id = :category_id",
-            $this->entity,
-            [
-                'category_id' => $categoryId
-            ]
-        );
-        return (new Pagerfanta($query))
 
-            ->setMaxPerPage($maxPerPage)
-            ->setCurrentPage($currentPage);
+    public function findAll(): QueryBuilder
+    {
+        $category = new CategoryRepository($this->pdo);
+        return $this->makeQuery()
+            ->select('p.*, c.name as categoryName, c.slug as categorySlug')
+            ->join($category->getTable() . ' as c', 'c.id = p.category_id')
+            ->orderBy('p.created_at', 'DESC');
     }
 
-    public function findPaginatedPublic(int $maxPerPage, int $currentPage)
+    public function findPaginatedPublic()
     {
-        $query = new PaginatedQuery(
-            $this->pdo,
-            "SELECT p.*, c.name as categoryName, c.slug as categorySlug
-                FROM {$this->table} as p
-                LEFT JOIN categories as c ON p.category_id = c.id
-                ORDER BY p.created_at DESC",
-            "SELECT COUNT(id) FROM {$this->table}",
-            $this->entity
-        );
-        return (new Pagerfanta($query))
-
-            ->setMaxPerPage($maxPerPage)
-            ->setCurrentPage($currentPage);
+        return $this->findAll()
+            ->where('p.published = 1')
+            ->where('p.created_at < NOW()');
     }
 
 
-    public function findWithCategory(int $id)
+    public function findPaginatedPublicForCategory(int $categoryId)
     {
-        return $this->fetchOrFail(
-            "SELECT p.*, c.id as categoryId, c.name as categoryName, c.slug as categorySlug
-                FROM {$this->table} as p
-                LEFT JOIN categories as c ON p.category_id = c.id
-                WHERE p.id = :id",
-            ['id' => $id]
-        );
+        return $this->findPaginatedPublic()
+            ->where('p.category_id = :category')
+            ->setParams('category', $categoryId);
     }
 
 
-    protected function paginatedQuery()
+    public function findWithCategory(int $postId): Post
     {
-        return "SELECT p.id, p.name, p.created_at, c.name as category
-            FROM {$this->table} as p
-            LEFT JOIN categories as c ON p.category_id = c.id
-            ORDER BY created_at ASC";
+        return $this->findPaginatedPublic()
+            ->where('p.id = :id')
+            ->setParams('id', $postId)
+            ->fetch();
     }
 }

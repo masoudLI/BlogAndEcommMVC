@@ -6,9 +6,11 @@
 
 <h1>Editer l'article {{ item.name }}</h1>
 
-<form action="{{ path(routePrefix ~ '_edit', {id: item.id}) }}" method="post" enctype="multipart/form-data">
-    {% include viewPath ~ '/_form.twig' %}
-    <button class="btn btn-primary" type="submit">Editer</button>
-</form>
+<div class="container">
+    <form action="{{ path(routePrefix ~ '_edit', {id: item.id}) }}" method="post" enctype="multipart/form-data">
+        {% include viewPath ~ '/_form.twig' %}
+        <button class="btn btn-primary" type="submit">Editer</button>
+    </form>
+</div>
 
 {% endblock %}

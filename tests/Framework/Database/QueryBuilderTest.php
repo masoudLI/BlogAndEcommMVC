@@ -37,33 +37,28 @@ class QueryBuilderTest extends DatabaseTestCase
 
     public function testWhereParamsQuery()
     {
-        $pdo = $this->getPDO();
-        $this->migrateDatabase($pdo);
-        $this->seedDatabase($pdo);
-        $posts = (new QueryBuilder($pdo))
+        $query = (new QueryBuilder($this->getPDO()))
             ->from('posts', 'p')
-            ->count();
-        $this->assertEquals(100, $posts);
-        $posts = (new QueryBuilder($pdo))
+            ->where('a = :a OR b = :b', 'c = :c');
+        $query2 = (new QueryBuilder($this->getPDO()))
             ->from('posts', 'p')
-            ->where('p.id < :number')
-            ->where('p.name < :name')
-            ->setParams('number', 30)
-            ->setParams('name', 'saeed')
-            ->count();
-        $this->assertEquals(29, $posts);
+            ->where('a = :a OR b = :b')
+            ->where('c = :c');
+        $this->assertEquals('SELECT * FROM posts as p WHERE (a = :a OR b = :b) AND (c = :c)', (string)$query);
+        $this->assertEquals('SELECT * FROM posts as p WHERE (a = :a OR b = :b) AND (c = :c)', (string)$query2);
     }
 
     public function testLimitOrder()
     {
-        $query = (new QueryBuilder($this->getPDO()))
+        $pdo = $this->getPDO();
+        $query = (new QueryBuilder($pdo))
             ->from('posts', 'p')
             ->select('name')
             ->orderBy('id', 'DESC')
-            ->orderBy('name', 'ASC')
+            ->orderBy('content', 'ASC')
             ->setMaxResult(5)
             ->offset(10);
-        $this->assertEquals('SELECT name FROM posts as p ORDER BY id DESC, name ASC LIMIT 5 OFFSET 10', (string)$query);
+        $this->assertEquals('SELECT name FROM posts as p ORDER BY id DESC, content ASC LIMIT 5 OFFSET 10', (string)$query);
     }
 
     public function testHydrateEntity()
@@ -81,8 +76,6 @@ class QueryBuilderTest extends DatabaseTestCase
     public function testLazyHydrate()
     {
         $pdo = $this->getPDO();
-        $this->migrateDatabase($pdo);
-        $this->seedDatabase($pdo);
         $posts = (new QueryBuilder($pdo))
             ->from('posts', 'p')
             ->into(Demo::class)
@@ -90,5 +83,19 @@ class QueryBuilderTest extends DatabaseTestCase
         $post = $posts[0];
         $post2 = $posts[0];
         $this->assertSame($post, $post2);
+    }
+
+    public function testjoin()
+    {
+        $pdo = $this->getPDO();
+        $query = (new QueryBuilder($pdo))
+            ->from('posts', 'p')
+            ->select('name')
+            ->join('categories as c', 'c.id = p.category_id')
+            ->join('categories as c2', 'c2.id = p.category_id', 'inner');
+        $this->assertEquals(
+            'SELECT name FROM posts as p LEFT JOIN categories as c ON c.id = p.category_id INNER JOIN categories as c2 ON c2.id = p.category_id',
+            (string)$query
+        );
     }
 }

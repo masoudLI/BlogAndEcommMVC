@@ -48,7 +48,7 @@ class PagePostIndex
     public function index(Request $request)
     {
         $params = $request->getQueryParams();
-        $posts = $this->postRepository->findPaginatedPublic(12, $params['p'] ?? 1);
+        $posts = $this->postRepository->findPaginatedPublic()->paginate(12, $params['p'] ?? 1);
         $categories = $this->categoryReposit->findAll();
         return $this->renderer->render('@blog/index', [
             'posts' => $posts,

@@ -2,6 +2,11 @@
 
 namespace Framework\Database;
 
+use App\Framework\Database\PaginatedQuery;
+use Exception;
+use Framework\Exceptions\NoRecordException;
+use IteratorAggregate;
+use Pagerfanta\Pagerfanta;
 use PDO;
 
 class QueryBuilder
@@ -22,7 +27,7 @@ class QueryBuilder
 
     private $offset;
 
-    private $join;
+    private $joins = [];
 
     private $pdo;
 
@@ -63,14 +68,6 @@ class QueryBuilder
         return $this;
     }
 
-    public function count()
-    {
-        $query = clone $this;
-        $table = current($this->from);
-        return $query->select("COUNT($table.id)")->execute()->fetchColumn();
-    }
-
-
     public function where(string ...$condition): self
     {
         $this->where = array_merge($this->where, $condition);
@@ -89,25 +86,56 @@ class QueryBuilder
     }
 
 
+    /**
+     * join
+     *
+     * @param  mixed $table
+     * @param  mixed $condition
+     * @param  mixed $type
+     * @return self
+     */
+    public function join(string $table, string $condition, string $type = "left"): self
+    {
+        $this->joins[$type][] = [$table, $condition];
+        return $this;
+    }
+
+
     public function setParams(string $key, $value): self
     {
         $this->params[$key] = $value;
         return $this;
     }
 
-    public function setMaxResult(int $int): self
+    /* public function setMaxResult(int $length): self
     {
-        $this->limit = $int;
+        $this->limit = $length;
+        return $this;
+    } */
+
+
+    public function limit(int $length, int $offset = 0): self
+    {
+        $this->limit = "$offset, $length";
         return $this;
     }
 
     public function offset(int $offset): self
     {
         if ($this->limit === null) {
-            throw new \Exception("On peut pas definir offset si offset n'est pas defini", 1);
+            throw new \Exception("On peut pas definir offset si limit n'est pas defini", 1);
         }
         $this->offset = $offset;
         return $this;
+    }
+
+
+    public function paginate(int $maxPerPage, int $currentPage = 1): Pagerfanta
+    {
+        $paginator = new PaginatedQuery($this);
+        return (new Pagerfanta($paginator))
+            ->setMaxPerPage($maxPerPage)
+            ->setCurrentPage($currentPage);
     }
 
 
@@ -123,6 +151,14 @@ class QueryBuilder
         $parts[] = "FROM";
         $parts[] = $this->builFrom();
 
+        if (!empty($this->joins)) {
+            foreach ($this->joins as $type => $joins) {
+                foreach ($joins as [$table, $condition]) {
+                    $parts[] = \strtoupper($type) . " JOIN $table ON $condition";
+                }
+            }
+        }
+
         if (!empty($this->where)) {
             $parts[] = "WHERE";
             $parts[] =  "(" . join(') AND (', $this->where) . ')';
@@ -132,7 +168,7 @@ class QueryBuilder
             $parts[] = 'ORDER BY';
             $parts[] = join(', ', $this->orderBy);
         }
-        if ($this->limit > 0) {
+        if ($this->limit) {
             $parts[] = "LIMIT " . $this->limit;
         }
 
@@ -172,8 +208,50 @@ class QueryBuilder
     public function fetchAll(): QueryResult
     {
         return new QueryResult(
-            $this->execute()->fetchAll(PDO::FETCH_ASSOC),
+            $this->execute()->fetchAll(\PDO::FETCH_ASSOC),
             $this->entity
         );
+    }
+
+    public function fetch()
+    {
+        $record = $this->execute()->fetch(PDO::FETCH_ASSOC);
+        if ($record === false) {
+            return false;
+        }
+        if ($this->entity) {
+            return Hydrator::hydrate($record, $this->entity);
+        }
+        return $record;
+    }
+
+    /**
+     * return un resulta ou un exeption
+     */
+    public function fetchOrFail()
+    {
+        $record = $this->fetch();
+        if ($record === false) {
+            throw new NoRecordException();
+        }
+        return $record;
+    }
+
+    /**
+     * count
+     *
+     * @return void
+     */
+    public function count()
+    {
+        $query = clone $this;
+        $table = current($this->from);
+        return $query->select("COUNT($table.id)")->execute()->fetchColumn();
+    }
+
+
+    public function getIterator(): \Traversable
+    {
+        return $this->fetchAll();
     }
 }

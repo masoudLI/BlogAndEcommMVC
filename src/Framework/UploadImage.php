@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+use Intervention\Image\ImageManager;
 use Psr\Http\Message\UploadedFileInterface;
 
 class UploadImage
@@ -18,7 +19,17 @@ class UploadImage
             $this->path = $path;
         }
     }
-
+    
+    /**
+     * upload
+     * 
+     * ca uplode une image, 
+     *
+     * @param  mixed $file
+     * @param  mixed $oldFile
+     * @param  mixed $filename
+     * @return string
+     */
     public function upload(UploadedFileInterface $file, ?string $oldFile = null, ?string $filename = null): ?string
     {
         if ($file->getError() === UPLOAD_ERR_OK) {
@@ -33,12 +44,21 @@ class UploadImage
                 mkdir($dirname, 777, true);
             }
             $file->moveTo($targetPath);
+            $this->generateFormats($targetPath);
             return pathinfo($targetPath)['basename'];
         }
         return null;
     }
 
-
+    
+    /**
+     * delete
+     * 
+     * ca efface image existant dans le dossier 
+     *
+     * @param  mixed $oldFile
+     * @return void
+     */
     public function delete(?string $oldFile): void
     {
         if ($oldFile) {
@@ -46,9 +66,42 @@ class UploadImage
             if (file_exists($oldFile)) {
                 unlink($oldFile);
             }
+            foreach ($this->formats as $format => $_) {
+                $oldFileWithFormat = $this->getPathWithSuffix($oldFile, $format);
+                if (file_exists($oldFileWithFormat)) {
+                    unlink($oldFileWithFormat);
+                }
+            }
         }
     }
-
+    
+    /**
+     * generateFormats
+     * 
+     * ca genere un format thumb (small) pour l'image 
+     *
+     * @param  mixed $targetPath
+     * @return void
+     */
+    private function generateFormats($targetPath)
+    {
+        foreach ($this->formats as $format => $size) {
+            $destination = $this->getPathWithSuffix($targetPath, 'small');
+            $manager = new ImageManager(['driver' => 'gd']);
+            [$width, $height] = $size;
+            $manager->make($targetPath)->fit($width, $height)->save($destination);
+        }
+        
+    }
+    
+    /**
+     * addCopySuffix
+     * 
+     * on genere meme image avec suffix copy si image existe deja ! au lieu l'effacer
+     *
+     * @param  mixed $targetPath
+     * @return string
+     */
     private function addCopySuffix(string $targetPath): string
     {
         if (file_exists($targetPath)) {
@@ -56,7 +109,16 @@ class UploadImage
         }
         return $targetPath;
     }
-
+    
+    /**
+     * getPathWithSuffix 
+     * 
+     * ca genere un suffix pour les images
+     *
+     * @param  mixed $path
+     * @param  mixed $suffix
+     * @return string
+     */
     private function getPathWithSuffix(string $path, string $suffix): string
     {
         $info = pathinfo($path);

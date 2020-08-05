@@ -4,14 +4,17 @@
 
 {% block body %}
 
-<h1>{{ post.name }}</h1>
+	{% if post.image %}
+		<img src="{{ post.imageUrl }}" alt="" style="width: 100%;">
+	{% endif %}
+	<h1>{{ post.name }}</h1>
 
-{% if post.categoryId %}
-<a href="{{path('blog_category_index', {slug: post.categorySlug, id: post.id})}}" class="item">{{post.categoryName}}</a>
-{% endif %}
+	{% if post.categoryId %}
+		<a href="{{path('blog_category_index', {slug: post.categorySlug, id: post.id})}}" class="item">{{post.categoryName}}</a>
+	{% endif %}
 
-<p class="text-muted">{{ post.created_at | ago }}</p>
+	<p class="text-muted">{{ post.createdAt | ago }}</p>
 
-{{ post.content | nl2br }}
+	{{ post.content | nl2br }}
 
 {% endblock %}

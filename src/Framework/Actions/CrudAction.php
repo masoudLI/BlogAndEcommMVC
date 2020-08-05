@@ -8,6 +8,7 @@ use Framework\Session\FlashService;
 use Framework\Actions\RouterAwareAction;
 use Framework\Renderer\RendererInterface;
 use Framework\Database\AbstractRepository;
+use Framework\Database\Hydrator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CrudAction
@@ -91,7 +92,7 @@ class CrudAction
     public function index(Request $request)
     {
         $params = $request->getQueryParams();
-        $items = $this->abstractRepository->findPaginated(12, $params['p'] ?? 1);
+        $items = $this->abstractRepository->findAll()->paginate(12, $params['p'] ?? 1);
         return $this->renderer->render($this->viewPath . '/index', [
             'items' => $items
         ]);
@@ -108,7 +109,7 @@ class CrudAction
                 $this->flash->addFlash('success', $this->messages['create']);
                 return $this->redirect($this->routePrefix . '_index');
             }
-            $item = $params;
+            Hydrator::hydrate($request->getParsedBody(), $item);
             $errors = $validator->getErrors();
         }
         return $this->renderer->render(
@@ -132,20 +133,19 @@ class CrudAction
                 $this->flash->addFlash('success', $this->messages['edit']);
                 return $this->redirect($this->routePrefix . '_index');
             }
+            Hydrator::hydrate($request->getParsedBody(), $item);
             $errors = $validator->getErrors();
-            $params['id'] = $item->getId();
-            $item = $params;
         }
         return $this->renderer->render(
             $this->viewPath . '/edit',
             $this->formParams([
-            'errors' => $errors ?? '',
-            'item' => $item
+                'errors' => $errors ?? '',
+                'item' => $item
             ])
         );
     }
 
-    public function delete(Request $request)
+    protected function delete(Request $request)
     {
         $this->abstractRepository->delete($request->getAttribute('id'));
         $this->flash->addFlash('error', $this->messages['supprimer']);

@@ -31,12 +31,12 @@ class Post
     /**
      * @var
      */
-    private ?DateTime $createdAt = null;
+    private DateTime $createdAt;
 
     /**
      * @var
      */
-    private ?DateTime $updatedAt = null;
+    private DateTime $updatedAt;
 
     /**
      * @var Category
@@ -45,6 +45,9 @@ class Post
     
 
     private $image;
+
+
+    private bool $published;
 
     /**
      * Get the value of id
@@ -159,7 +162,7 @@ class Post
      *
      * @return  self
      */
-    public function setCreatedAt(?DateTime $datetime): self
+    public function setCreatedAt($datetime): self
     {
         if (is_string($datetime)) {
             $this->createdAt = new DateTime($datetime);
@@ -186,7 +189,7 @@ class Post
      *
      * @return  self
      */
-    public function setUpdatedAt(?DateTime $datetime)
+    public function setUpdatedAt($datetime)
     {
         if (is_string($datetime)) {
             $this->updatedAt = new DateTime($datetime);
@@ -245,6 +248,26 @@ class Post
 
     public function getImageUrl()
     {
-        return "/uploads/posts" . $this->getImage();
+        return "/uploads/posts/" . $this->getImage();
+    }
+
+    /**
+     * Get the value of published
+     */ 
+    public function getPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * Set the value of published
+     *
+     * @return  self
+     */ 
+    public function setPublished($published)
+    {
+        $this->published = $published;
+
+        return $this;
     }
 }

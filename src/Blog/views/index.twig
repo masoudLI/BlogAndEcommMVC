@@ -23,7 +23,7 @@
 								<p class="card-text">
 									{{ post.content | nl2br | excerpt }}
 								</p>
-								<p class="text-muted">{{ post.created_at | ago}}</p>
+								<p class="text-muted">{{ post.createdAt | ago}}</p>
 							</div>
 							<div class="card-footer">
 								<a href="{{ path('blog_show', {slug: post.slug, id: post.id}) }}" class="btn btn-primary">

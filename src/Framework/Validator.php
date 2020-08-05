@@ -13,6 +13,7 @@ class Validator
 {
     private const MIME_TYPES = [
         'jpg' => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
         'png' => 'image/png',
         'pdf' => 'application/pdf'
     ];
@@ -75,7 +76,8 @@ class Validator
     {
         $value = $this->getValue($key);
         $length = mb_strlen($value);
-        if (!is_null($min) &&
+        if (
+            !is_null($min) &&
             !is_null($max) &&
             ($length < $min || $length > $max)
         ) {

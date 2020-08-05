@@ -26,8 +26,8 @@
 					<tr>
 						<td>{{item.id}}</td>
 						<td>{{item.name}}</td>
-						<td>{{item.created_at.format('Y-m-d H:i:s')}}</td>
-						<td>{{item.category}}</td>
+						<td>{{item.createdAt.format('Y/m/d H:i')}}</td>
+						<td>{{item.categoryName}}</td>
 						<td>
 							<a href="{{path(routePrefix ~ '_edit', {id: item.id})}}">Editer</a>
 						</td>
