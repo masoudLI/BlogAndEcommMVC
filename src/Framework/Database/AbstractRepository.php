@@ -88,7 +88,7 @@ class AbstractRepository
      */
     public function findAll()
     {
-        return $this->makeQuery()->fetchAll();
+        return $this->makeQuery();
     }
 
     /**
@@ -97,7 +97,7 @@ class AbstractRepository
      * @param  mixed $id
      * @return void
      */
-    public function find(int $id)
+    public function find($id)
     {
         return $this->makeQuery()->where('id = :id')->setParams('id', $id)->fetchOrFail();
     }

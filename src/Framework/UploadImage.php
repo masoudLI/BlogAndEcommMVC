@@ -22,8 +22,8 @@ class UploadImage
     
     /**
      * upload
-     * 
-     * ca uplode une image, 
+     *
+     * ca uplode une image,
      *
      * @param  mixed $file
      * @param  mixed $oldFile
@@ -53,8 +53,8 @@ class UploadImage
     
     /**
      * delete
-     * 
-     * ca efface image existant dans le dossier 
+     *
+     * ca efface image existant dans le dossier
      *
      * @param  mixed $oldFile
      * @return void
@@ -77,8 +77,8 @@ class UploadImage
     
     /**
      * generateFormats
-     * 
-     * ca genere un format thumb (small) pour l'image 
+     *
+     * ca genere un format thumb (small) pour l'image
      *
      * @param  mixed $targetPath
      * @return void
@@ -91,12 +91,11 @@ class UploadImage
             [$width, $height] = $size;
             $manager->make($targetPath)->fit($width, $height)->save($destination);
         }
-        
     }
     
     /**
      * addCopySuffix
-     * 
+     *
      * on genere meme image avec suffix copy si image existe deja ! au lieu l'effacer
      *
      * @param  mixed $targetPath
@@ -111,8 +110,8 @@ class UploadImage
     }
     
     /**
-     * getPathWithSuffix 
-     * 
+     * getPathWithSuffix
+     *
      * ca genere un suffix pour les images
      *
      * @param  mixed $path

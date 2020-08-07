@@ -3,9 +3,12 @@
 declare(strict_types=1);
 
 use App\Admin\AdminModule;
+use App\Blog\BlogModule;
+use App\Auth\AuthModule;
+use App\Auth\ForbidddenMiddleware;
 use App\Blog\Actions\PagePostIndex;
 use Framework\App;
-use App\Blog\BlogModule;
+use Framework\Auth\LoggedinMiddleware;
 use Framework\Middleware\CsrfMiddleware;
 use Framework\Middleware\DispatcherMiddleware;
 use Framework\Middleware\MethodMiddleware;
@@ -21,14 +24,18 @@ require 'vendor/autoload.php';
 
 $app = (new App('config/config.php'))
     ->addModule(AdminModule::class)
-    ->addModule(BlogModule::class);
+    ->addModule(BlogModule::class)
+    ->addModule(AuthModule::class);
 
 $app->getContainer()->get(Router::class)->get('home', '/', PagePostIndex::class, []);
 
 // middleware
+$container = $app->getContainer();
 $app
     ->pipe(\Franzl\Middleware\Whoops\WhoopsMiddleware::class)
     ->pipe(TrailingSlashMiddleware::class)
+    ->pipe(ForbidddenMiddleware::class)
+    ->pipe($container->get('admin'), LoggedinMiddleware::class)
     ->pipe(MethodMiddleware::class)
     //->pipe(CsrfMiddleware::class)
     ->pipe(RouterMiddleware::class)

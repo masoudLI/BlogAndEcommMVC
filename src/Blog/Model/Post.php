@@ -253,7 +253,7 @@ class Post
 
     /**
      * Get the value of published
-     */ 
+     */
     public function getPublished()
     {
         return $this->published;
@@ -263,7 +263,7 @@ class Post
      * Set the value of published
      *
      * @return  self
-     */ 
+     */
     public function setPublished($published)
     {
         $this->published = $published;

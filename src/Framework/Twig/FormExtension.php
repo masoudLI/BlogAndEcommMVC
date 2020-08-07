@@ -40,7 +40,7 @@ class FormExtension extends AbstractExtension
             $input = $this->select($value, $options['options'], $attributes);
         } elseif ($type === 'checkbox') {
             $input = $this->checkbox($value, $attributes);
-        }elseif ($type === 'date') {
+        } elseif ($type === 'date') {
             $input = $this->date($value, $attributes);
         } elseif ($type === 'file') {
             $input = $this->file($attributes);

@@ -17,10 +17,11 @@ use Framework\Twig\{
     TimeExtension
 };
 
-use function DI\{autowire, create, factory, get};
+use function DI\{autowire, create, factory, get, env};
 
 
 return [
+    'env' => env('ENV', 'production'),
     'database.host' => 'localhost',
     'database.username' => 'root',
     'database.password' => '',

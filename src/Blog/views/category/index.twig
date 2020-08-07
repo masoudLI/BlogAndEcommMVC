@@ -8,7 +8,7 @@
 
 	<div class="block_categorie">
 		{% for c in categories  %}
-			<a class="block_categorie_item {% if c.id == category.id %}acticeCat{% endif %}" href="{{ path('blog_category_index', {id: c.id, slug: c.slug}) }}">{{ c.name }}</a>
+			<a class="block_categorie_item {% if c.id == category.id %}active{% endif %}" href="{{ path('blog_category_index', {id: c.id, slug: c.slug}) }}">{{ c.name }}</a>
 		{% endfor %}
 	</div>
 	<section class="container-produit p-t">
@@ -17,9 +17,31 @@
 				{{ category.name }}
 			</h1>
 		{% endif %}
+		<div class="row">
+			<div class="col-md-9">
+				{% for row in posts | batch(4) %}
+				<div class="card-deck">
+					{% for post in row %}
+					<div class="card">
+						<div class="card-block">
+							<p class="card-text">
+								{{ post.content | nl2br | excerpt }}
+							</p>
+							<p class="text-muted">{{ post.createdAt | ago}}</p>
+						</div>
+						<div class="card-footer">
+							<a href="{{ path('blog_show', {slug: post.slug, id: post.id}) }}" class="btn btn-primary">
+								Voir l'article
+							</a>
+						</div>
+					</div>
+					{% endfor %}
+				</div>
+				{% endfor %}
+			</div>
 	</section>
 
 	<ul class="pagerfanta">
-		{{ paginate(posts, 'blog_category_index') }}
+		{{ paginate(posts, 'blog_category_index', {slug: category.slug, id: category.id}) }}
 	</ul>
 {% endblock %}

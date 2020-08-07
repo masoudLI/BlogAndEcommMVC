@@ -3,13 +3,12 @@
 namespace Framework\Database;
 
 use App\Framework\Database\PaginatedQuery;
-use Exception;
 use Framework\Exceptions\NoRecordException;
 use IteratorAggregate;
 use Pagerfanta\Pagerfanta;
 use PDO;
 
-class QueryBuilder
+class QueryBuilder implements IteratorAggregate
 {
 
 

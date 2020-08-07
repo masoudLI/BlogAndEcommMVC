@@ -1,0 +1,11 @@
+{% extends "layout.twig" %}
+
+{% block body %}
+<form action="{{path('auth_login')}}" method="POST" class="ui form">
+	{{ csrf_input() }}
+	{{ field('username', null, 'Nom de l\'utilisateur') }}
+    {{ field('password', null, 'Mot de passe', {type: 'password'}) }}
+    <p class="forget"><a href="{{ path('auth_password') }}">Mot de passe oublié ?</a></p>
+    <button class="btn btn-primary" type="submit">Envoyer</button>
+</form>
+{% endblock %}

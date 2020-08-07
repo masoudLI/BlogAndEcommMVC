@@ -26,7 +26,7 @@ class CategoryCrudAction extends CrudAction
         parent::__construct($renderer, $categoryRepository, $router, $flash);
     }
 
-    protected function prePersist(Request $request): array
+    protected function prePersist(Request $request, $post): array
     {
         return array_filter($request->getParsedBody(), function ($key) {
             return in_array($key, ['name', 'slug']);
