@@ -7,6 +7,7 @@ use App\Blog\BlogModule;
 use App\Auth\AuthModule;
 use App\Auth\ForbidddenMiddleware;
 use App\Blog\Actions\PagePostIndex;
+use App\Contact\ContactModule;
 use Framework\App;
 use Framework\Auth\LoggedinMiddleware;
 use Framework\Middleware\CsrfMiddleware;
@@ -25,7 +26,8 @@ require 'vendor/autoload.php';
 $app = (new App('config/config.php'))
     ->addModule(AdminModule::class)
     ->addModule(BlogModule::class)
-    ->addModule(AuthModule::class);
+    ->addModule(AuthModule::class)
+    ->addModule(ContactModule::class);
 
 $app->getContainer()->get(Router::class)->get('home', '/', PagePostIndex::class, []);
 

@@ -50,5 +50,10 @@ return [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             ]
         );
-    }
+    },
+
+    // MAILER
+    'mail_to' => 'massoudemami80@yahoo.fr',
+    'mail_from' => 'massoudemami80@yahoo.fr',
+    Swift_Mailer::class => \DI\factory(\Framework\SwiftMailerFactory::class)
 ];

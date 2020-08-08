@@ -1,0 +1,16 @@
+{% extends "layout.twig" %}
+
+{% block body %}
+	<section class="container-produit p-t">
+		<h1 class="rdv--title">Nous contacter</h1>
+		<div class="block-rdv">
+			<form action="{{ path('contact') }}" method="post" class="ui form">
+				{{ csrf_input() }}
+				{{ field('name', null, 'Votre nom') }}
+				{{ field('email', null, 'Votre email') }}
+				{{ field('content', null, 'Votre message', {type: 'textarea'}) }}
+				<button class="ui submit button" type="submit">Valider</button>
+			</form>
+		</div>
+	</section>
+{% endblock %}

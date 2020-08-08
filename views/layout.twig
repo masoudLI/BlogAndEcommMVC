@@ -3,15 +3,11 @@
 
 	<head>
 		<title>{% block title "Mon site " %}</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-			integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 		<style>
 			body {
 				padding-top: 5rem;
 			}
-
-			.pagerfanta {}
-
 			.pagerfanta a,
 			.pagerfanta span {
 				display: inline-block;
@@ -59,7 +55,7 @@
 
 			.pagerfanta .disabled {
 				border-color: #ccf;
-				color: #cf;
+				color: #ccf;
 			}
 		</style>
 		{% block stylesheets %}{% endblock %}
@@ -72,6 +68,9 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active">
 					<a class="nav-link" href="{{ path('blog_index') }}">Blog</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{{ path('contact') }}">Contact</a>
 				</li>
 			</ul>
 			<div class="navbar-nav mr-auto">
