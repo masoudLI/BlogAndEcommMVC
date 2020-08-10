@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Account\AccountModule;
 use App\Admin\AdminModule;
 use App\Blog\BlogModule;
 use App\Auth\AuthModule;
@@ -27,7 +28,8 @@ $app = (new App('config/config.php'))
     ->addModule(AdminModule::class)
     ->addModule(BlogModule::class)
     ->addModule(AuthModule::class)
-    ->addModule(ContactModule::class);
+    ->addModule(ContactModule::class)
+    ->addModule(AccountModule::class);
 
 $app->getContainer()->get(Router::class)->get('home', '/', PagePostIndex::class, []);
 

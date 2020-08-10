@@ -1,0 +1,20 @@
+{% extends "layout.twig" %}
+
+{% block body %}
+<section class="container-produit p-t">
+    <h1 class="rdv--title">Mon compte</h1>
+    <div class="block-rdv">
+        <form action="{{ path('account_profile') }}" method="post" class="ui form">
+            {{ csrf_input() }}
+            {{ field('firstname', user.firstname, 'Prénom') }}
+            {{ field('lastname', user.lastname, 'Nom') }}
+            <h2 class="rdv--title">Changer de mot de passe</h2>
+            <p class="pass" style="text-align: center; font-size: 1.3rem;">Laissez vide pour ne rien changer</p>
+            {{ field('password', null, 'Mot de passe', {type: 'password'}) }}
+            {{ field('password_confirm', null, 'Confirmer le mot de passe', {type: 'password'}) }}
+            <button class="ui submit button">Valider</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

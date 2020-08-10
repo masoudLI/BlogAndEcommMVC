@@ -76,7 +76,8 @@ class Validator
     {
         $value = $this->getValue($key);
         $length = mb_strlen($value);
-        if (!is_null($min) &&
+        if (
+            !is_null($min) &&
             !is_null($max) &&
             ($length < $min || $length > $max)
         ) {
@@ -280,6 +281,39 @@ class Validator
         $statement->execute([$value]);
         if ($statement->fetchColumn() === false) {
             $this->addError($key, 'exists', [$table]);
+        }
+        return $this;
+    }
+
+    
+    /**
+     * unique
+     *
+     * @param  string $key
+     * @param  string|AbstractRepository $table
+     * @param  \PDO $pdo
+     * @param  int|null $exclude
+     * @return self
+     */
+    public function unique(string $key, $table, ?\PDO $pdo = null, ?int $exclude = null): self
+    {
+        if ($table instanceof AbstractRepository) {
+            $pdo = $table->getPdo();
+            $table = $table->getTable();
+        }
+        $value = $this->getValue($key);
+        $query = "SELECT id FROM $table WHERE $key = ?";
+        $params = [$value];
+
+        if ($exclude !== null) {
+            $query .= " AND id != ?";
+            $params[] = $exclude;
+        }
+
+        $statement = $pdo->prepare($query);
+        $statement->execute($params);
+        if ($statement->fetchColumn() !== false) {
+            $this->addError($key, 'unique', [$value]);
         }
         return $this;
     }

@@ -1,118 +1,125 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<title>{% block title "Mon site " %}</title>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-		<style>
-			body {
-				padding-top: 5rem;
-			}
-			.pagerfanta a,
-			.pagerfanta span {
-				display: inline-block;
-				border: 1px solid blue;
-				color: blue;
-				margin-right: 0.2em;
-				padding: 0.25em 0.35em;
-			}
+<head>
+	<title>{% block title "Mon site " %}</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+		integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<style>
+		body {
+			padding-top: 5rem;
+		}
 
-			.pagerfanta a {
-				text-decoration: none;
-			}
+		.pagerfanta a,
+		.pagerfanta span {
+			display: inline-block;
+			border: 1px solid blue;
+			color: blue;
+			margin-right: 0.2em;
+			padding: 0.25em 0.35em;
+		}
 
-			.pagerfanta a:hover {
-				background: #ccf;
-			}
+		.pagerfanta a {
+			text-decoration: none;
+		}
 
-			.pagerfanta .dots {
-				border-width: 0;
-			}
+		.pagerfanta a:hover {
+			background: #ccf;
+		}
 
-			.pagerfanta .current {
-				background: #ccf;
-				font-weight: bold;
-			}
+		.pagerfanta .dots {
+			border-width: 0;
+		}
 
-			.pagerfanta .disabled {
-				border-color: #ccf;
-				color: #ccf;
-			}
+		.pagerfanta .current {
+			background: #ccf;
+			font-weight: bold;
+		}
 
-			COLORS:.pagerfanta a,
-			.pagerfanta span {
-				border-color: blue;
-				color: blue;
-			}
+		.pagerfanta .disabled {
+			border-color: #ccf;
+			color: #ccf;
+		}
 
-			.pagerfanta a:hover {
-				background: #ccf;
-			}
+		COLORS:.pagerfanta a,
+		.pagerfanta span {
+			border-color: blue;
+			color: blue;
+		}
 
-			.pagerfanta .current {
-				background: #ccf;
-			}
+		.pagerfanta a:hover {
+			background: #ccf;
+		}
 
-			.pagerfanta .disabled {
-				border-color: #ccf;
-				color: #ccf;
-			}
-		</style>
-		{% block stylesheets %}{% endblock %}
-	</head>
+		.pagerfanta .current {
+			background: #ccf;
+		}
 
-	<body>
+		.pagerfanta .disabled {
+			border-color: #ccf;
+			color: #ccf;
+		}
+	</style>
+	{% block stylesheets %}{% endblock %}
+</head>
 
-		<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
-			<a class="navbar-brand" href="#">Mon super site</a>
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active">
-					<a class="nav-link" href="{{ path('blog_index') }}">Blog</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="{{ path('contact') }}">Contact</a>
-				</li>
-			</ul>
-			<div class="navbar-nav mr-auto">
-				{% if current_user() %}
-					<div class="navbar-test">Connecté en tant que
-						{{ current_user().username }}</div>
-					<form class="nav-item active" method="post" action="{{ path('auth_logout') }}">
-						{{ csrf_input() }}
-						<button class="nav-link">Se déconnecter</button>
-					</form>
-				{% else %}
-					<div class="nav-item active">
-						<a class="nav-link" href="{{ path('auth_login') }}">Se connecter</a>
-					</div>
-				{% endif %}
+<body>
+
+	<nav class="navbar fixed-top navbar-expand-sm navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">Mon super site</a>
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="{{ path('blog_index') }}">Blog</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="{{ path('contact') }}">Contact</a>
+			</li>
+		</ul>
+		<div class="navbar-nav mr-auto">
+			{% if current_user() %}
+			<div class="navbar-test">Connecté en tant que
+				{{ current_user().username }}</div>
+			<form class="nav-item active" method="post" action="{{ path('auth_logout') }}">
+				{{ csrf_input() }}
+				<button class="nav-link">Se déconnecter</button>
+			</form>
+			{% else %}
+			<div class="nav-item active">
+				<a class="nav-link" href="{{ path('auth_login') }}">Se connecter</a>
 			</div>
-		</nav>
-
-		<div class="container">
-			{% if flash('success') %}
-				<div class="alert alert-success">
-					{{ flash('success') }}
-				</div>
+			<div class="nav-item active">
+				<a class="nav-link" href="{{ path('account_signup') }}">Inscription</a>
+			</div>
 			{% endif %}
-
-			{% if flash('error') %}
-				<div class="alert alert-danger">
-					{{ flash('error') }}
-				</div>
-			{% endif %}
-			{% block body %}{% endblock %}
-
 		</div>
-		<!-- /.container -->
+	</nav>
 
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.locales.min.js"></script>
-		<script>
-			timeago().render(document.querySelectorAll('.timeago'), 'fr')
-		</script>
-		{% block javascripts %}{% endblock %}
-	</body>
+	<div class="container">
+		{% if flash('success') %}
+		<div class="alert alert-success">
+			{{ flash('success') }}
+		</div>
+		{% endif %}
+
+		{% if flash('error') %}
+		<div class="alert alert-danger">
+			{{ flash('error') }}
+		</div>
+		{% endif %}
+		{% block body %}{% endblock %}
+
+	</div>
+	<!-- /.container -->
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js"
+		integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK"
+		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/timeago.js/3.0.2/timeago.locales.min.js"></script>
+	<script>
+		timeago().render(document.querySelectorAll('.timeago'), 'fr')
+	</script>
+	{% block javascripts %}{% endblock %}
+</body>
 
 </html>

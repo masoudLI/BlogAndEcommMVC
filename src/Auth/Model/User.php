@@ -125,4 +125,5 @@ class User implements AuthUser
 
         return $this;
     }
+
 }

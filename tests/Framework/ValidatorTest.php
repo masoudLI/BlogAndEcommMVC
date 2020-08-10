@@ -86,4 +86,34 @@ class ValidatorTest extends DatabaseTestCase
         $this->assertCount(1, $this->makeValidator(['date' => '2012-21-12'])->dateTime('date')->getErrors());
         $this->assertCount(1, $this->makeValidator(['date' => '2013-02-29 11:12:13'])->dateTime('date')->getErrors());
     }
+
+    public function testExists()
+    {
+        $pdo = $this->getPDO();
+        $pdo->exec("CREATE TABLE test (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(255)
+        )");
+        $pdo->exec("INSERT INTO test (name) VALUES ('a1')");
+        $pdo->exec("INSERT INTO test (name) VALUES ('a2')");
+
+        $this->assertTrue($this->makeValidator(["name" => "1"])->exists('name', 'test', $pdo)->isValid());
+        $this->assertFalse($this->makeValidator(["name" => "112122"])->exists('name', 'test', $pdo)->isValid());
+    }
+
+    public function testUnique()
+    {
+        $pdo = $this->getPDO();
+        $pdo->exec("CREATE TABLE test (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name VARCHAR(255)
+        )");
+        $pdo->exec("INSERT INTO test (name) VALUES ('a1')");
+        $pdo->exec("INSERT INTO test (name) VALUES ('a2')");
+
+        $this->assertFalse($this->makeValidator(["name" => "a1"])->unique('name', 'test', $pdo)->isValid());
+        $this->assertTrue($this->makeValidator(["name" => "a2444"])->unique('name', 'test', $pdo)->isValid());
+        $this->assertTrue($this->makeValidator(["name" => "a1"])->unique('name', 'test', $pdo, 1)->isValid());
+        $this->assertFalse($this->makeValidator(["name" => "a2"])->unique('name', 'test', $pdo, 1)->isValid());
+    }
 }

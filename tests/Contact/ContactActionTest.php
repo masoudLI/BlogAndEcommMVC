@@ -18,17 +18,17 @@ class ContactActionTest extends ActionTestCase
     /**
      * @var RendererInterface
      */
-    private $renderer;
+    private RendererInterface $renderer;
 
     /**
      * @var FlashService
      */
-    private $flash;
+    private FlashService $flash;
 
     /**
      * @var \Swift_Mailer
      */
-    private $mailer;
+    private \Swift_Mailer $mailer;
 
     /**
      * @var string

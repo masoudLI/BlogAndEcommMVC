@@ -7,8 +7,10 @@ use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class DispatcherMiddleware
+class DispatcherMiddleware implements MiddlewareInterface
 {
     private $container;
 
@@ -17,23 +19,16 @@ class DispatcherMiddleware
         $this->container = $container;
     }
 
-    public function __invoke(ServerRequestInterface $request, callable $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $route = $request->getAttribute(Router\Route::class);
         if ($route === null) {
-            return $next($request);
+            return $handler->handle($request);
         }
         $callable = $route->getCallback();
-        if (is_string($callable)) {
-            $callable = $this->container->get($callable);
+        if (!is_array($callable)) {
+            $callable = [$callable];
         }
-        $response = call_user_func_array($callable, [$request]);
-        if (is_string($response)) {
-            return new Response(200, [], $response);
-        } elseif ($response instanceof ResponseInterface) {
-            return $response;
-        } else {
-            throw new \Exception("The response is not string Or an instance of ResponseInterface");
-        }
+        return (new CombinedMiddleware($this->container, $callable))->process($request, $handler);
     }
 }

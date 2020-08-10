@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Framework;
 
+use Framework\Middleware\CombinedMiddleware;
 use Framework\Middleware\RoutePrefixedMiddleware;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,6 +35,7 @@ class App implements Handler
      * @param string[] module list a charger
      */
     private array $middlewares = [];
+
 
 
     private int $index = 0;
@@ -77,14 +79,11 @@ class App implements Handler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $middleware = $this->getMiddleware();
-        if ($middleware === null) {
-            throw new \Exception();
-        } elseif (is_callable($middleware)) {
-            return call_user_func_array($middleware, [$request, [$this, 'handle']]);
-        } elseif ($middleware instanceof MiddlewareInterface) {
-            return $middleware->process($request, $this);
+        if ($this->index > 1) {
+            throw new \Exception("On a parcouru l'ensemble des middlewares et on a rencontré un probleme");
         }
+        $middleware = new CombinedMiddleware($this->container, $this->middlewares);
+        return $middleware->process($request, $this);
     }
 
 
@@ -121,24 +120,6 @@ class App implements Handler
         } else {
             throw new \Exception("The response is not string Or an instance of ResponseInterface");
         } */
-    }
-
-
-    /**
-     * @return object
-     */
-    private function getMiddleware(): ?object
-    {
-        if (array_key_exists($this->index, $this->middlewares)) {
-            if (is_string($this->middlewares[$this->index])) {
-                $middleware = $this->container->get($this->middlewares[$this->index]);
-            } else {
-                $middleware = $this->middlewares[$this->index];
-            }
-            $this->index++;
-            return $middleware;
-        }
-        return null;
     }
 
     /**

@@ -40,7 +40,9 @@ class FormExtension extends AbstractExtension
             $input = $this->select($value, $options['options'], $attributes);
         } elseif ($type === 'checkbox') {
             $input = $this->checkbox($value, $attributes);
-        } elseif ($type === 'date') {
+        } elseif ($type === 'password') {
+            $input = $this->password($value, $attributes);
+        }elseif ($type === 'date') {
             $input = $this->date($value, $attributes);
         } elseif ($type === 'file') {
             $input = $this->file($attributes);
@@ -74,6 +76,19 @@ class FormExtension extends AbstractExtension
     {
         return "<input type=\"text\" ". $this->getHtmlFormArray($attributes) . " value=\"$value\">";
     }
+
+    /**
+     * input
+     *
+     * @param  string $value
+     * @param  array $attributes
+     * @return string
+     */
+    private function password(?string $value, array $attributes): string
+    {
+        return "<input type=\"password\" " . $this->getHtmlFormArray($attributes) . ">";
+    }
+
 
 
     /**

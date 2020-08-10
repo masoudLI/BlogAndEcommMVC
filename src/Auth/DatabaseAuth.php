@@ -29,7 +29,7 @@ class DatabaseAuth implements Auth
         /** @var User */
         $user = $this->userRepository->findBy('username', $username);
         if ($user && \password_verify($password, $user->getPassword())) {
-            $this->session->set('auth_user', $user->getId());
+            $this->setUser($user);
             return $user;
         }
 
@@ -57,5 +57,11 @@ class DatabaseAuth implements Auth
             }
         }
         return null;
+    }
+
+    public function setUser(User $user)
+    {
+        $this->session->set('auth_user', $user->getId());
+        $this->user = $user;
     }
 }
