@@ -22,6 +22,6 @@ class AccountModule extends Module
         $router->get('account_signup', '/inscription', SignupAction::class);
         $router->post(null, '/inscription', SignupAction::class);
         $router->get('account_profile', '/profile', [LoggedinMiddleware::class, AccountAction::class]);
-        $router->post(null, '/profile', AccountEditAction::class);
+        $router->post(null, '/profile', [LoggedinMiddleware::class, AccountEditAction::class]);
     }
 }

@@ -23,7 +23,7 @@ class App implements Handler
     /**
      * @var string tableaux de module
      */
-    private string $configDefinition;
+    private string $definitions;
 
     /**
      * @param string[] module list a charger
@@ -41,9 +41,9 @@ class App implements Handler
     private int $index = 0;
 
 
-    public function __construct(string $configDefinition)
+    public function __construct(string $definitions)
     {
-        $this->configDefinition = $configDefinition;
+        $this->definitions = $definitions;
     }
 
 
@@ -63,12 +63,12 @@ class App implements Handler
     /**
      * pipe
      *
-     * @param  string $middleware
+     * @param  $middleware
      * @return self
      */
-    public function pipe(string $routePrefix, ?string $middleware = null): self
+    public function pipe(string $routePrefix, ?object $middleware = null): self
     {
-        if ($middleware === null) {
+        if ($middleware  === null) {
             $this->middlewares[] = $routePrefix;
         } else {
             $this->middlewares[] = new RoutePrefixedMiddleware($this->container, $routePrefix, $middleware);
@@ -79,8 +79,9 @@ class App implements Handler
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        $this->index++;
         if ($this->index > 1) {
-            throw new \Exception("On a parcouru l'ensemble des middlewares et on a rencontré un probleme");
+            throw new \Exception();
         }
         $middleware = new CombinedMiddleware($this->container, $this->middlewares);
         return $middleware->process($request, $this);
@@ -131,7 +132,7 @@ class App implements Handler
     {
         if ($this->container === null) {
             $builder = new \DI\ContainerBuilder();
-            $builder->addDefinitions($this->configDefinition);
+            $builder->addDefinitions($this->definitions);
             foreach ($this->modules as $module) {
                 if ($module::DEFINITIONS) {
                     $builder->addDefinitions($module::DEFINITIONS);

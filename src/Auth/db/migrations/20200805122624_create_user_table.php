@@ -13,7 +13,7 @@ final class CreateUserTable extends AbstractMigration
             ->addColumn('username', 'string')
             ->addColumn('email', 'string')
             ->addColumn('password', 'string')
-            ->addColumn('role', 'string')
+            ->addColumn('role', 'string', ['default' => 'role_user'])
             ->addIndex(['email', 'username'], ['unique' => true])
             ->create();
     }

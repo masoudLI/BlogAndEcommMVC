@@ -47,7 +47,7 @@ class Post
     private $image;
 
 
-    private bool $published;
+    private bool $published = false;
 
     /**
      * Get the value of id

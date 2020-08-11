@@ -2,9 +2,8 @@
 
 namespace App\Auth\Model;
 
-use Framework\Auth\User as AuthUser;
 
-class User implements AuthUser
+class User implements \Framework\Auth\User
 {
 
     private int $id;
@@ -19,7 +18,8 @@ class User implements AuthUser
     private string $password;
 
 
-    private array $roles;
+    private string $role;
+
     /**
      * getUsername
      *
@@ -49,20 +49,7 @@ class User implements AuthUser
      */
     public function getRoles(): array
     {
-        return [];
-    }
-
-
-    /**
-     * Set the value of roles
-     *
-     * @return  self
-     */
-    public function setRoles($roles)
-    {
-        $this->roles[] = $roles;
-
-        return $this;
+        return [$this->role];
     }
 
 
@@ -122,6 +109,26 @@ class User implements AuthUser
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of role
+     */
+    public function getRole()
+    {
+        return $this->role;
+    }
+
+    /**
+     * Set the value of role
+     *
+     * @return  self
+     */
+    public function setRole(string $role)
+    {
+        $this->role = $role;
 
         return $this;
     }

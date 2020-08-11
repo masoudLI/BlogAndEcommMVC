@@ -38,9 +38,9 @@ class BlogModule extends Module
         ]);
 
 
-        if ($container->has('admin')) {
-            $prefixAdmin = $container->get('admin');
-            $router->get('blog_admin_posts_index', $prefixAdmin . '/posts', PostCrudAction::class, []);
+        if ($container->has('admin_prefix')) {
+            $prefixAdmin = $container->get('admin_prefix');
+            $router->get('blog_admin_posts_index', $prefixAdmin , PostCrudAction::class, []);
             $router->get('blog_admin_posts_edit', $prefixAdmin . '/posts/edit/{id}', PostCrudAction::class, [
                 'id' => '[0-9]+'
             ]);

@@ -6,11 +6,12 @@ use App\Account\AccountModule;
 use App\Admin\AdminModule;
 use App\Blog\BlogModule;
 use App\Auth\AuthModule;
-use App\Auth\ForbidddenMiddleware;
+use App\Auth\ForbiddenMiddleware;
 use App\Blog\Actions\PagePostIndex;
 use App\Contact\ContactModule;
 use Framework\App;
 use Framework\Auth\LoggedinMiddleware;
+use Framework\Auth\RoleMiddlewareFactory;
 use Framework\Middleware\CsrfMiddleware;
 use Framework\Middleware\DispatcherMiddleware;
 use Framework\Middleware\MethodMiddleware;
@@ -38,8 +39,11 @@ $container = $app->getContainer();
 $app
     ->pipe(\Franzl\Middleware\Whoops\WhoopsMiddleware::class)
     ->pipe(TrailingSlashMiddleware::class)
-    ->pipe(ForbidddenMiddleware::class)
-    ->pipe($container->get('admin'), LoggedinMiddleware::class)
+    ->pipe(ForbiddenMiddleware::class)
+    ->pipe(
+        $container->get('admin_prefix'),
+        $container->get(RoleMiddlewareFactory::class)->makeForRole('admin')
+    )
     ->pipe(MethodMiddleware::class)
     //->pipe(CsrfMiddleware::class)
     ->pipe(RouterMiddleware::class)

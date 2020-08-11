@@ -1,7 +1,7 @@
 <?php
 
 use App\Auth\DatabaseAuth;
-use App\Auth\ForbidddenMiddleware;
+use App\Auth\ForbiddenMiddleware;
 use App\Auth\Model\User;
 use App\Auth\Repository\UserRepository;
 use App\Auth\Twig\AuthTwigExtension;
@@ -19,5 +19,5 @@ return [
     ]),
     Auth::class => get(DatabaseAuth::class),
     UserRepository::class => autowire()->constructorParameter('entity', get('auth_entity')),
-    ForbidddenMiddleware::class => autowire()->constructorParameter('loginPath', get('auth_login'))
+    ForbiddenMiddleware::class => autowire()->constructorParameter('loginPath', get('auth_login'))
 ];

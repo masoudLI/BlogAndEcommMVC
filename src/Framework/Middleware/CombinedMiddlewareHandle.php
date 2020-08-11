@@ -24,7 +24,8 @@ class CombinedMiddlewareHandle implements RequestHandlerInterface
     private int $index = 0;
 
 
-    private $handler;
+    private RequestHandlerInterface $handler;
+
 
     public function __construct(ContainerInterface $container, array $middlewares, RequestHandlerInterface $handler)
     {
@@ -36,8 +37,8 @@ class CombinedMiddlewareHandle implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $middleware = $this->getMiddleware();
-        if ($middleware === null) {
-            $this->handler->handle($request);
+        if (is_null($middleware)) {
+            return $this->handler->handle($request);
         } elseif (is_callable($middleware)) {
             $response = call_user_func_array($middleware, [$request, [$this, 'handle']]);
             if (is_string($response)) {
@@ -46,13 +47,13 @@ class CombinedMiddlewareHandle implements RequestHandlerInterface
             return $response;
         } elseif ($middleware instanceof MiddlewareInterface) {
             return $middleware->process($request, $this);
-        }  
+        }
     }
 
     /**
      * @return object
      */
-    private function getMiddleware(): ?object
+    private function getMiddleware()
     {
         if (array_key_exists($this->index, $this->middlewares)) {
             if (is_string($this->middlewares[$this->index])) {

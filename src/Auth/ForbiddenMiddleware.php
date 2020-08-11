@@ -2,6 +2,7 @@
 
 namespace App\Auth;
 
+use Framework\Auth\BadRoleException;
 use Framework\Auth\ForbiddenException;
 use Framework\Response\RedirectResponse;
 use Framework\Session\FlashService;
@@ -12,7 +13,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class ForbidddenMiddleware implements MiddlewareInterface
+class ForbiddenMiddleware implements MiddlewareInterface
 {
 
     private $loginPath;
@@ -29,7 +30,18 @@ class ForbidddenMiddleware implements MiddlewareInterface
             return $handler->handle($request);
         } catch (ForbiddenException $ex) {
             return $this->redirect($request);
+        } catch (BadRoleException $e) {
+            return $this->redirectProfile($request);
         }
+        throw $e;
+    }
+
+    private function redirectProfile($request)
+    {
+        $path = $request->getUri()->getPath();
+        $this->session->set('auth_redirect', $path);
+        (new FlashService($this->session))->error("Vous devez posséder un compte pour acceder a la page admin");
+        return new RedirectResponse('/profile');
     }
 
 

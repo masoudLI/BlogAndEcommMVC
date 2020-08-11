@@ -28,7 +28,7 @@ class CombinedMiddleware implements MiddlewareInterface
 
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $handleMiddleware = new CombinedMiddlewareHandle($this->container, $this->middlewares, $handler);
-        return $handleMiddleware->handle($request);
+        $handler = new CombinedMiddlewareHandle($this->container, $this->middlewares, $handler);
+        return $handler->handle($request);
     }
 }

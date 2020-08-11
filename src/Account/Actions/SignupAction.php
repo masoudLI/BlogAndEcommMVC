@@ -55,7 +55,7 @@ class SignupAction
             $userParams = [
                 'username' => $params['username'],
                 'email' => $params['email'],
-                'password' => \password_hash($params['password'], PASSWORD_DEFAULT)
+                'password' => \password_hash($params['password'], PASSWORD_DEFAULT),
             ];
             $this->userRepository->insert($userParams);
             $user = Hydrator::hydrate($userParams, User::class);

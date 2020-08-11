@@ -91,7 +91,7 @@ class SignupActionTest extends ActionTestCase
             $this->assertArrayHasKey('errors', $params);
             $this->assertEquals(['email', 'password'], array_keys($params['errors']));
             return true;
-        }))->shouldHaveBeenCalled();
+        }))->shouldBeCalled();
     }
 
     public function testPostValid()

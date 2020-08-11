@@ -10,6 +10,10 @@ class User extends \App\Auth\Model\User
 
     private string $lastname;
 
+
+    private string $role;
+
+
     /**
      * Get the value of firstname
      */
@@ -49,4 +53,5 @@ class User extends \App\Auth\Model\User
 
         return $this;
     }
+
 }

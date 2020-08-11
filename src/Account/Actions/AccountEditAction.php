@@ -2,7 +2,7 @@
 
 namespace App\Account\Actions;
 
-use App\Auth\DatabaseAuth;
+use App\Auth\Model\User;
 use App\Auth\Repository\UserRepository;
 use Framework\Auth;
 use Framework\Renderer\RendererInterface;
@@ -56,6 +56,7 @@ class AccountEditAction
             if (!empty($params['password'])) {
                 $userParams['password'] = password_hash($params['password'], PASSWORD_DEFAULT);
             }
+            /** @var User $user */
             $this->userRepository->update($user->getId(), $userParams);
             $this->flashService->success('Votre compte a bien été mis à jour');
             return new RedirectResponse($request->getUri()->getPath());
