@@ -2,7 +2,6 @@
 
 namespace App\Auth\Model;
 
-
 class User implements \Framework\Auth\User
 {
 
@@ -132,5 +131,4 @@ class User implements \Framework\Auth\User
 
         return $this;
     }
-
 }

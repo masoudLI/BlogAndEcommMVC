@@ -5,6 +5,8 @@ namespace App\Auth;
 use App\Auth\Actions\LoginAction;
 use App\Auth\Actions\LoginAttemptAction;
 use App\Auth\Actions\LogoutAction;
+use App\Auth\Actions\PasswordForgetAction;
+use App\Auth\Actions\PasswordResetAction;
 use Framework\Module;
 use Framework\Renderer\RendererInterface;
 use Framework\Router;

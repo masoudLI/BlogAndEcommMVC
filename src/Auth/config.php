@@ -2,6 +2,7 @@
 
 use App\Auth\DatabaseAuth;
 use App\Auth\ForbiddenMiddleware;
+use App\Auth\Mailer\PasswordResetMailer;
 use App\Auth\Model\User;
 use App\Auth\Repository\UserRepository;
 use App\Auth\Twig\AuthTwigExtension;
@@ -19,5 +20,6 @@ return [
     ]),
     Auth::class => get(DatabaseAuth::class),
     UserRepository::class => autowire()->constructorParameter('entity', get('auth_entity')),
-    ForbiddenMiddleware::class => autowire()->constructorParameter('loginPath', get('auth_login'))
+    ForbiddenMiddleware::class => autowire()->constructorParameter('loginPath', get('auth_login')),
+    PasswordResetMailer::class => autowire()->constructorParameter('from', get('mail_from'))
 ];

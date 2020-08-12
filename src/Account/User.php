@@ -53,5 +53,4 @@ class User extends \App\Auth\Model\User
 
         return $this;
     }
-
 }

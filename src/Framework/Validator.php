@@ -76,8 +76,7 @@ class Validator
     {
         $value = $this->getValue($key);
         $length = mb_strlen($value);
-        if (
-            !is_null($min) &&
+        if (!is_null($min) &&
             !is_null($max) &&
             ($length < $min || $length > $max)
         ) {

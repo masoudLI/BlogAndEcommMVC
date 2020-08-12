@@ -42,7 +42,7 @@ class FormExtension extends AbstractExtension
             $input = $this->checkbox($value, $attributes);
         } elseif ($type === 'password') {
             $input = $this->password($value, $attributes);
-        }elseif ($type === 'date') {
+        } elseif ($type === 'date') {
             $input = $this->date($value, $attributes);
         } elseif ($type === 'file') {
             $input = $this->file($attributes);
