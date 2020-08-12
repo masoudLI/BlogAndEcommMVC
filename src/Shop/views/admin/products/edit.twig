@@ -1,0 +1,15 @@
+{% extends '@admin/layout.twig' %}
+
+{% block title "Editer les produits" %}
+
+{% block body %}
+
+<h1>Editer l'article {{ item.name }}</h1>
+
+<form action="{{ path(routePrefix ~ '_edit', {id: item.id}) }}" method="post" enctype="multipart/form-data"
+    class="ui form">
+    {% include viewPath ~ '/form.twig' %}
+    <button class="btn btn-primary" type="submit">Editer</button>
+</form>
+
+{% endblock %}

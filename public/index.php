@@ -9,6 +9,7 @@ use App\Auth\AuthModule;
 use App\Auth\ForbiddenMiddleware;
 use App\Blog\Actions\PagePostIndex;
 use App\Contact\ContactModule;
+use App\Shop\ShopModule;
 use Framework\App;
 use Framework\Auth\LoggedinMiddleware;
 use Framework\Auth\RoleMiddlewareFactory;
@@ -31,7 +32,8 @@ $app = (new App('config/config.php'))
     ->addModule(BlogModule::class)
     ->addModule(AuthModule::class)
     ->addModule(ContactModule::class)
-    ->addModule(AccountModule::class);
+    ->addModule(AccountModule::class)
+    ->addModule(ShopModule::class);
 
 $app->getContainer()->get(Router::class)->get('home', '/', PagePostIndex::class, []);
 

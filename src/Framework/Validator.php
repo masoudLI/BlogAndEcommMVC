@@ -63,6 +63,9 @@ class Validator
      */
     public function notEmpty(string ...$keys): self
     {
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
         foreach ($keys as $key) {
             $value = $this->getValue($key);
             if (is_null($value) || empty($value)) {
@@ -109,6 +112,29 @@ class Validator
         return $this;
     }
 
+
+    /**
+     * Vérifie que l'élément est un slug
+     *
+     * @param string $key
+     * @return Validator
+     */
+    public function float(string $key): self
+    {
+        $value = $this->getValue($key);
+        if (!is_float($value)) {
+            $this->addError($key, 'float');
+        }
+        return $this;
+    }
+
+    
+    /**
+     * confirm
+     *
+     * @param  mixed $key
+     * @return self
+     */
     public function confirm(string $key): self
     {
         $value = $this->getValue($key);
