@@ -25,7 +25,6 @@ class ValidatorError
         'email' => 'Vous devez entrer un mail valide',
         'confirm' => 'vous devez confirmez le champ %s',
         'numeric' => 'le champ doit etre %s',
-        'float' => 'le champ doit etre %s',
         'size' => 'Image est trop grand'
     ];
 

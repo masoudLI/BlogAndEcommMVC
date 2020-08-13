@@ -103,7 +103,6 @@ class CrudAction
         $item = $this->getNewEntity();
         if ($request->getMethod() === 'POST') {
             $params = $this->prePersist($request, $item);
-            $this->postPersist($request, $item);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
                 $this->abstractRepository->insert($params);
@@ -128,7 +127,6 @@ class CrudAction
         $item = $this->abstractRepository->find($id);
         if ($request->getMethod() === 'POST') {
             $params = $this->prePersist($request, $item);
-            $this->postPersist($request, $item);
             $validator = $this->getValidator($request);
             if ($validator->isValid()) {
                 $this->abstractRepository->update($id, $params);
@@ -176,18 +174,6 @@ class CrudAction
         return array_filter((array)array_merge($request->getParsedBody(), $request->getUploadedFiles()), function ($key) {
             return in_array($key, []);
         }, ARRAY_FILTER_USE_KEY);
-    }
-
-    
-    /**
-     * postPersist
-     *
-     * @param  mixed $request
-     * @param  mixed $item
-     * @return void
-     */
-    protected function postPersist(Request $request, $item): void
-    {
     }
 
 
