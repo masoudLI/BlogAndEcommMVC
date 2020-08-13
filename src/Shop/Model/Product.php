@@ -4,7 +4,7 @@ namespace App\Shop\Model;
 
 use Framework\Datetime\Timestamp;
 
-class Shop
+class Product
 {
 
     private int $id;

@@ -32,7 +32,8 @@
         "intervention/image": "^2.5",
         "swiftmailer/swiftmailer": "^6.2",
         "ramsey/uuid": "^4.1",
-        "stripe/stripe-php": "^7.46"
+        "stripe/stripe-php": "^7.46",
+        "staaky/vatrates": "^2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.2",

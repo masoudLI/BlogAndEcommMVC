@@ -3,7 +3,7 @@
 namespace App\Shop\Actions;
 
 use App\Shop\ProductUploadImage;
-use App\Shop\Model\Shop;
+use App\Shop\Model\Product;
 use App\Shop\PdfUpload;
 use App\Shop\Repository\ShopRepository;
 use Framework\Router;
@@ -43,7 +43,7 @@ class ShopCrudAction extends CrudAction
 
     protected function getNewEntity()
     {
-        $product = new Shop();
+        $product = new Product();
         $product->setCreatedAt(new \DateTime());
         return $product;
     }
