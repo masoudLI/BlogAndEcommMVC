@@ -2,11 +2,13 @@
 
 namespace App\Shop;
 
+use App\Shop\Actions\InvoiceAction;
 use App\Shop\Actions\ProductListingAction;
 use App\Shop\Actions\ProductShowAction;
 use App\Shop\Actions\ProductDowonloadAction;
 use App\Shop\Actions\ProductRecapAction;
 use App\Shop\Actions\PurchaseProcessAction;
+use App\Shop\Actions\PurchasesListingAction;
 use App\Shop\Actions\ShopCrudAction;
 use Framework\Module;
 use Framework\Renderer\RendererInterface;
@@ -35,12 +37,16 @@ class ShopModule extends Module
             'id' => '[0-9]+'
         ]);
 
-        $router->post('shop_recap', '/boutique/{slug}/{id}/recap', ProductRecapAction::class, [
-            'slug' => '[a-z\-0-9]+',
+        $router->post('shop_recap', '/boutique/{id}/recap', ProductRecapAction::class, [
             'id' => '[0-9]+'
         ]);
 
         $router->post('shop_process', '/boutique/{id}/process', PurchaseProcessAction::class, [
+            'id' => '[0-9]+'
+        ]);
+
+        $router->get('shop_purchases', '/boutique/mes-achats', PurchasesListingAction::class, []);
+        $router->get('shop_invoice', '/boutique/facture/{id}', InvoiceAction::class, [
             'id' => '[0-9]+'
         ]);
 

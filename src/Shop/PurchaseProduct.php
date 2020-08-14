@@ -20,11 +20,14 @@ class PurchaseProduct
 
     private $stripeUserRepository;
 
-    public function __construct(PurchaseRepository $purchaseRepository, Stripe $stripe, StripeUserRepository $stripeUserRepository)
+    private $purchaseTable;
+
+    public function __construct(PurchaseRepository $purchaseRepository, Stripe $stripe, StripeUserRepository $stripeUserRepository, PurchaseRepository $purchaseTable)
     {
         $this->purchaseRepository = $purchaseRepository;
         $this->stripe = $stripe;
         $this->stripeUserRepository = $stripeUserRepository;
+        $this->purchaseTable = $purchaseTable;
     }
 
     public function process(Product $product, User $user, string $token)
@@ -99,7 +102,7 @@ class PurchaseProduct
                 'email'  => $user->getEmail(),
                 'source' => $token
             ]);
-            $this->stripeUserTable->insert([
+            $this->stripeUserRepository->insert([
                 'user_id' => $user->getId(),
                 'customer_id' => $customer->id,
                 'created_at' => date('Y-m-d H:i:s')

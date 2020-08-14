@@ -1,0 +1,23 @@
+<div class="card-deck">
+    <div class="card">
+        <div class="image">
+            {% if product.image %}
+            <img src="{{ product.thumb  }}" alt="" class="im-product">
+            {% endif %}
+        </div>
+        <div class="card-block">
+            <p class="card-text">
+                {{ product.description | nl2br | excerpt }}
+            </p>
+            <p class="text-muted">{{ product.createdAt | ago}}</p>
+        </div>
+        <p class="card-text">
+            {{ product.price | number_format('2', ',', ' ') }}
+        </p>
+        <div class="card-footer">
+            <a href="{{ path('shop_show', {slug: product.slug, id: product.id}) }}" class="btn btn-primary">
+                Voir le produit
+            </a>
+        </div>
+    </div>
+</div>

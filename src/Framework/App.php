@@ -23,7 +23,7 @@ class App implements Handler
     /**
      * @var string tableaux de module
      */
-    private string $definitions;
+    private array $definitions = [];
 
     /**
      * @param string[] module list a charger
@@ -41,8 +41,11 @@ class App implements Handler
     private int $index = 0;
 
 
-    public function __construct(string $definitions)
+    public function __construct(array $definitions = [])
     {
+        if (is_string($definitions)) {
+            $definitions = [$definitions];
+        }
         $this->definitions = $definitions;
     }
 
@@ -132,7 +135,9 @@ class App implements Handler
     {
         if ($this->container === null) {
             $builder = new \DI\ContainerBuilder();
-            $builder->addDefinitions($this->definitions);
+            foreach ($this->definitions as $definition) {
+                $builder->addDefinitions($definition);
+            }
             foreach ($this->modules as $module) {
                 if ($module::DEFINITIONS) {
                     $builder->addDefinitions($module::DEFINITIONS);

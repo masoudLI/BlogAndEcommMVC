@@ -74,8 +74,8 @@ class PurchaseProductTest extends TestCase
         $customer = $this->makeCustomer();
         $charge = $this->makeCharge();
 
-        $this->purchaseRepository->findFor($product, $user)->willReturn(null);
-        $this->stripeUserTable->findCustomerForUser($user)->willReturn($customerId);
+        $this->purchaseRepository->findForAlreadyPurchase($product, $user)->willReturn(null);
+        $this->stripeUserRepository->findCustomerForUser($user)->willReturn($customerId);
         $this->stripe->getCustomer($customerId)->willReturn($customer);
         $this->stripe->createCardForCustomer($customer, $token)
             ->shouldBeCalled()

@@ -1,0 +1,18 @@
+{% extends 'layout.twig' %}
+
+{% block title 'Nos produits' %}
+{% block body %}
+<section class="container">
+    <div class="row">
+        <div class="col-md-9">
+            {% for product in products %}
+                {% include "@shop/_product.twig" %}
+            {% else %}
+                <h2>On a rien trouvé pour votre recherche</h2>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{{ paginate(products, 'shop') }}
+
+{% endblock %}

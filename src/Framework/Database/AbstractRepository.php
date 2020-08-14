@@ -6,6 +6,7 @@ use \PDO;
 use Pagerfanta\Pagerfanta;
 use App\Framework\Database\PaginatedQuery;
 use Framework\Exceptions\NoRecordException;
+use stdClass;
 
 class AbstractRepository
 {
@@ -26,7 +27,7 @@ class AbstractRepository
      * @var string|null
      */
 
-    protected string $entity;
+    protected string $entity = stdClass::class;
 
 
 

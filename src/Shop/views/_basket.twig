@@ -1,0 +1,33 @@
+<section class="container-produit p-t">
+    <div class="main-panier">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="h1">Nom du produit</th>
+                    <th class="h1">Prix HT</th>
+                    <th class="h1">TVA</th>
+                    <th class="h1">Prix HTC</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>{{product.title }}</td>
+                    <td class="prix">{{ product.price | number_format(2, ',', ' ') }} € </td>
+                    <td class="prix">{{ vat | number_format(2, ',', ' ') }} %</td>
+                    <td>{{(product.price * (vat + 100) / 100) | number_format(2, ',', ' ') }} € </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" class="total">Total HT</td>
+                    <td class="text-right">{{ product.price | number_format(2, ',', ' ') }} €</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+    <div class="retour">
+        <a href="{{path('shop')}}" class="retour-boutique"><i class="fas fa-arrow-left"></i>Retour a la boutique</a>
+    </div>
+</section>

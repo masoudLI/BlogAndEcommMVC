@@ -183,4 +183,9 @@ class Product
     {
         return "/uploads/products/" . $this->getImage();
     }
+
+    public function getPdf()
+    {
+        return "{$this->id}.pdf";
+    }
 }

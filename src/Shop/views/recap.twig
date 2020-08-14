@@ -1,0 +1,24 @@
+{% extends "layout.twig" %}
+
+{% block title 'Récapitulatif de paiements' %}
+
+{% block body %}
+<section class="container-produit p-t">
+    <h1 class="rdv--title p-nouv nou-actus">Récapitulatif de paiements</h1>
+    <div class="recap-paie">
+        <div class="produits_body p-t-4 recap-b-1">
+            {% include "@shop/_basket.twig" with {vat: vat, notFormPaie: true} %}
+        </div>
+        <div class="produits_footer recap-b-2">
+            <h2 class="d h-recap">Information de paiements</h2>
+            <p class="des-p p-cont p-recap">{{ card.brand }} - **** **** **** {{ card.last4 }}</p>
+            <form action="{{path('shop_process', {id: product.id})}}" method="post">
+                {{ csrf_input() }}
+                <input type="hidden" name="stripeToken" value="{{ stripeToken }}">
+                <button class="bt">Payer</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
