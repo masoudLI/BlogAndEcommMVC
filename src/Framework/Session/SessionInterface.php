@@ -12,7 +12,7 @@ interface SessionInterface
      * @param  mixed $default
      * @return void
      */
-    public function get(string $key, array $default = null);
+    public function get(string $key, $default = null);
 
     
     /**

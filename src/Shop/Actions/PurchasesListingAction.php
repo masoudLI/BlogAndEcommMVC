@@ -25,7 +25,7 @@ class PurchasesListingAction
 
     public function __invoke(ServerRequestInterface $request)
     {
-        $purchases = $this->purchasesRepository->findForUsePurchase($this->auth->getUser()); 
+        $purchases = $this->purchasesRepository->findForUsePurchase($this->auth->getUser());
         return $this->renderer->render('@shop/commandes', [
             'purchases' => $purchases
         ]);

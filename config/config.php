@@ -13,6 +13,7 @@ use Framework\Twig\{
     FlashExtension,
     FormExtension,
     PagerFantaExtension,
+    PriceFormatExtension,
     TextExtension,
     TimeExtension
 };
@@ -34,7 +35,8 @@ return [
         get(TimeExtension::class),
         get(FlashExtension::class),
         get(FormExtension::class),
-        get(CsrfExtension::class)
+        get(CsrfExtension::class),
+        get(PriceFormatExtension::class)
     ],
     RendererInterface::class => factory(TwigRendererFactory::class),
     Router::class => create(),
