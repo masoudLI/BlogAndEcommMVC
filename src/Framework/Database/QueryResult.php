@@ -175,4 +175,13 @@ class QueryResult implements ArrayAccess, Iterator, Countable
     {
         return count($this->index);
     }
+
+    public function toArray()
+    {
+        $records = [];
+        foreach ($this->records as $k => $v) {
+            $records[] = $this->get($k);
+        }
+        return $records;
+    }
 }

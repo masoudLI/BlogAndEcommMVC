@@ -9,7 +9,9 @@
     "autoload": {
         "psr-4": {
             "Framework\\": "src/Framework/",
-            "App\\": "src/"
+            "App\\": "src/",
+            "Massoud\\": "src/Massoud/",
+            "Psr\\EventManager\\": "src/Psr/EventManager/"
         }
     },
     "autoload-dev": {
@@ -31,13 +33,9 @@
         "psr/http-server-handler": "^1.0",
         "intervention/image": "^2.5",
         "swiftmailer/swiftmailer": "^6.2",
-<<<<<<< HEAD
-        "ramsey/uuid": "^4.1"
-=======
         "ramsey/uuid": "^4.1",
         "stripe/stripe-php": "^7.46",
         "staaky/vatrates": "^2.3"
->>>>>>> a87bfe50a223babfa29c6f16819ead1d9bbb3f8e
     },
     "require-dev": {
         "phpunit/phpunit": "^9.2",

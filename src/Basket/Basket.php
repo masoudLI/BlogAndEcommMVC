@@ -34,7 +34,7 @@ class Basket
             }
         }
     }
-    
+
     /**
      * removeProduct
      *
@@ -48,7 +48,7 @@ class Basket
         });
     }
 
-    
+
     /**
      * count
      *
@@ -83,7 +83,7 @@ class Basket
     }
 
 
-    private function getRow(Product $product): ?BasketRow
+    public function getRow(Product $product): ?BasketRow
     {
 
         foreach ($this->rows as $row) {
@@ -92,5 +92,10 @@ class Basket
             }
         }
         return null;
+    }
+
+    public function empty()
+    {
+        $this->rows = [];
     }
 }

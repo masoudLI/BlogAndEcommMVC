@@ -18,9 +18,12 @@ class SessionBasket extends Basket
         $this->rows = array_map(function ($row) {
             $r = new BasketRow();
             $r->setProductId($row['id']);
+            $product = new Product();
+            $product->setId($row['id']);
+            $r->setProduct($product);
             $r->setQuantity($row['quantity']);
             return $r;
-        }, $rows);
+        }, (array) $rows);
     }
 
     public function addProduct(Product $product, ?int $quantity = null): void
@@ -56,5 +59,11 @@ class SessionBasket extends Basket
                 'quantity' => $row->getQuantity()
             ];
         }, $this->rows);
+    }
+
+    public function empty()
+    {
+        parent::empty();
+        $this->persist();
     }
 }
