@@ -45,4 +45,19 @@ class PriceFormatExtension extends AbstractExtension
         return number_format($price, 2, ',', ' ') . ' ' . ($currency ?: $this->currency);
     }
 
+
+    public function getVat(float $price, ?float $vat): float
+    {
+        return $price + $this->getVatOnly($price, $vat);
+    }
+
+
+    public function getVatOnly(float $price, ?float $vat): float
+    {
+        if ($vat === null) {
+            return 0;
+        }
+        return $price * ($vat / 100);
+    }
+
 }

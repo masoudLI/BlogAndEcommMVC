@@ -10,51 +10,51 @@
                 </tr>
             </thead>
             {% if basket.rows|length != 0 %}
-            <tbody>
-                {% for row in basket.rows %}
-                <tr>
-                    <td>
-                        {% if row.product.image %}
-                        <img src="{{row.product.thumb }}" width="40px" height="40px">
-                        {% endif %}
-                        {{row.product.title }}
-                    </td>
-                    <td class="product-actions">
-                        {% if noform %}
-                        {{row.quantity}}
-                        {% else %}
-                        <form action="{{path('shop_basket_change', {id: row.product.id})}}" method="post">
-                            {{ csrf_input() }}
-                            <select name="quantity" class="form-qte" onchange="this.form.submit()">
-                                {% for i in 0..10 %}
-                                <option value="{{ i }}" {% if i == row.quantity %}selected="selected" {% endif %}>
-                                    {{ i }}{% if i == 0 %} (supprimer){% endif %}
-                                </option>
-                                {% endfor %}
-                            </select>
-                            <!-- <input type="number"  class="form-qte" name="quantity" value=""> -->
-                            <button class="btn-change">Changer</button>
-                        </form>
-                        {% endif %}
-                    </td>
-                    <td class="prix">{{ row.product.price | price_format }}</td>
-                </tr>
-                {% endfor %}
+                <tbody>
+                    {% for row in basket.rows %}
                     <tr>
-                        <td colspan="2" class="total">Total HT</td>
-                        <td class="text-right">{{ basket.total | price_format }}</td>
+                        <td>
+                            {% if row.product.image %}
+                            <img src="{{row.product.thumb }}" width="40px" height="40px">
+                            {% endif %}
+                            {{row.product.title }}
+                        </td>
+                        <td class="product-actions">
+                            {% if noform %}
+                                {{row.quantity}}
+                            {% else %}
+                            <form action="{{path('shop_basket_change', {id: row.product.id})}}" method="post">
+                                {{ csrf_input() }}
+                                <select name="quantity" class="form-qte" onchange="this.form.submit()">
+                                    {% for i in 0..10 %}
+                                        <option value="{{ i }}" {% if i == row.quantity %}selected="selected" {% endif %}>
+                                            {{ i }}{% if i == 0 %} (supprimer){% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <!-- <input type="number"  class="form-qte" name="quantity" value=""> -->
+                                <button class="btn-change">Changer</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                        <td class="prix">{{ row.product.price | price_format }}</td>
                     </tr>
-                {% if vat %}
-                    <tr>
-                        <td colspan="2">Total TTC (TVA {{ vat  | price_format('%') }})</td>
-                        <td>{{(basket.price * (vat + 100) / 100) | price_format }}</td>
-                    </tr>
-                {% endif %}
-            </tbody>
+                    {% endfor %}
+                        <tr>
+                            <td colspan="2" class="total">Total HT</td>
+                            <td class="text-right">{{ basket.total | price_format }}</td>
+                        </tr>
+                    {% if vat %}
+                        <tr>
+                            <td colspan="2">Total TTC (TVA {{ vat  | price_format('%') }})</td>
+                            <td>{{(basket.total * (vat + 100) / 100) | price_format }}</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
             {% else %}
-            <tr>
-                <td colspan="4">Aucun article dans votre panier</td>
-            </tr>
+                <tr>
+                    <td colspan="4">Aucun article dans votre panier</td>
+                </tr>
             {% endif %}
         </table>
     </div>

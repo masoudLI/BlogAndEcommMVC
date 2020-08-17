@@ -20,12 +20,15 @@ class BasketAction
 
     private $basketRepository;
 
-    public function __construct(RendererInterface $renderer, Basket $basket, ProductRepository $productRepository, BasketRepository $basketRepository)
+    private $stripeKey;
+
+    public function __construct(RendererInterface $renderer, Basket $basket, ProductRepository $productRepository, BasketRepository $basketRepository, string $stripeKey)
     {
         $this->renderer = $renderer;
         $this->basket = $basket;
         $this->productRepository = $productRepository;
         $this->basketRepository = $basketRepository;
+        $this->stripeKey = $stripeKey;
     }
 
     public function __invoke(ServerRequestInterface $request)
@@ -48,7 +51,8 @@ class BasketAction
     {
         $this->basketRepository->hydrateBasket($this->basket);
         return $this->renderer->render('@basket/show', [
-            'basket' => $this->basket
+            'basket' => $this->basket,
+            'stripeKey' => $this->stripeKey
         ]);
     }
 }

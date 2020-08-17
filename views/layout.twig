@@ -85,14 +85,16 @@
 				</div>
 			{% endif %}
 			{% if current_user() %}
+				{% if module_enabled('basket') %}
+					<div class="nav-item  {{ is_subpath('basket_orders') ? 'active' }}">
+						<a class="nav-link" href="{{ path('basket_orders') }}">Mes Commandes</a>
+					</div>
+				{% endif %}
 				<div class="navbar-test">Connecté en tant que {{ current_user().username }}</div>
 				<form class="nav-item active" method="post" action="{{ path('auth_logout') }}">
 					{{ csrf_input() }}
 					<button class="nav-link">Se déconnecter</button>
 				</form>
-				<div class="nav-item  {{ is_subpath('shop_purchases') ? 'active' }}">
-					<a class="nav-link" href="{{ path('shop_purchases') }}">Mes Commandes</a>
-				</div>
 			{% else %}
 				<div class="nav-item ">
 					<a class="nav-link" href="{{ path('auth_login') }}">Se connecter</a>
