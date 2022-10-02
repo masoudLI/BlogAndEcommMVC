@@ -55,7 +55,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * @return mixed Can return any type.
      * @since 5.0.0
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->get($this->index);
     }
@@ -79,7 +79,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * @return mixed scalar on success, or null on failure.
      * @since 5.0.0
      */
-    public function key()
+    public function key(): int|string|null
     {
         return $this->index;
     }
@@ -91,7 +91,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * Returns true on success or false on failure.
      * @since 5.0.0
      */
-    public function valid()
+    public function valid(): bool
     {
         return isset($this->records[$this->index]);
     }
@@ -102,7 +102,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * @return void Any returned value is ignored.
      * @since 5.0.0
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->index = 0;
     }
@@ -119,7 +119,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->records[$offset]);
     }
@@ -133,7 +133,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * @return mixed Can return all value types.
      * @since 5.0.0
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
@@ -151,7 +151,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * @throws \Exception
      * @since 5.0.0
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \Exception("Error Processing Request");
     }
@@ -166,7 +166,7 @@ class QueryResult implements ArrayAccess, Iterator, Countable
      * @throws \Exception
      * @since 5.0.0
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \Exception("Error Processing Request");
     }
@@ -183,5 +183,16 @@ class QueryResult implements ArrayAccess, Iterator, Countable
             $records[] = $this->get($k);
         }
         return $records;
+    }
+
+
+    /**
+     * Get les enregistrements
+     *
+     * @return  array
+     */ 
+    public function getRecords()
+    {
+        return $this->records;
     }
 }

@@ -99,7 +99,8 @@ class BasketRepository extends AbstractRepository
     {
         return $this->basketRowRepository
             ->makeQuery()
-            ->where("basket_id = {$modelBasket->getId()}")
+            ->where("basket_id = :basketId")
+            ->setParams('basketId', $modelBasket->getId())
             ->fetchAll()
             ->toArray();
     }

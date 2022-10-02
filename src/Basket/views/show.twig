@@ -1,26 +1,39 @@
 {% extends 'layout.twig' %}
 
 {% block body %}
-	{% include '@basket/_basket.twig' with {noform: false}%}
-	<p>
-		{% if current_user() %}
-			<form action="{{path('basket_recap')}}" method="POST">
-				{{ csrf_input() }}
-				<script src="https://checkout.stripe.com/checkout.js" class="stripe-button" 
-                    data-key="{{ stripeKey }}" 
-                    data-amount="{{ basket.price * 100 }}" 
-                    data-name="Panier" 
-                    data-email="{{ current_user().email }}" 
-                    data-description="Achat sur monsite.com" 
-                    data-image="https://stripe.com/img/documentation/checkout/marketplace.png" 
-                    data-locale="fr" 
-                    data-zip-code="true" 
-                    data-currency="eur">
-                </script>
-			</form>
-		{% else %}
-			<a class="btn btn-primary" href="{{ path('auth_login') }}">Commander</a>
-		{% endif %}
-	</p>
+{% include '@basket/_basket.twig' with {noform: false}%}
+<p>
+	{% if current_user() %}
+	<button id="checkout-button">Checkout</button>
+	{% else %}
+	<a class="btn btn-primary" href="{{ path('auth_login') }}">Commander</a>
+	{% endif %}
+</p>
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+	var stripe = new Stripe('{{stripeKey}}');
+	var checkoutButton = document.getElementById('checkout-button');
+
+	checkoutButton.addEventListener('click', async function () {
+		try {
+			const response = await fetch('/panier/commander', {
+				method: 'POST',
+			})
+			if (response.ok) {
+				const data = await response.json()
+				stripe.redirectToCheckout({sessionId: data.id})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+
+	});
+</script>
 
 {% endblock %}

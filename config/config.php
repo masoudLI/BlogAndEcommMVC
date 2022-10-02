@@ -25,8 +25,8 @@ return [
     'env' => env('ENV', 'production'),
     'database.host' => 'localhost',
     'database.username' => 'root',
-    'database.password' => '',
-    'database.name' => 'monframework',
+    'database.password' => 'root',
+    'database.name' => 'site',
     'views_path' => dirname(__DIR__) . '/views',
     'twig.extensions' => [
         get(RouterTwigExtension::class),

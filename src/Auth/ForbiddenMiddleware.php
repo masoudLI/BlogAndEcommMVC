@@ -17,7 +17,7 @@ class ForbiddenMiddleware implements MiddlewareInterface
 {
 
     private $loginPath;
-    
+
     public function __construct($loginPath, SessionInterface $session)
     {
         $this->loginPath = $loginPath;
@@ -28,12 +28,12 @@ class ForbiddenMiddleware implements MiddlewareInterface
     {
         try {
             return $handler->handle($request);
-        } catch (ForbiddenException $ex) {
+        } catch (ForbiddenException $e) {
             return $this->redirect($request);
         } catch (BadRoleException $e) {
             return $this->redirectProfile($request);
         }
-        throw $e;
+        //throw $e;
     }
 
     private function redirectProfile($request)

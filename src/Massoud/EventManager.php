@@ -72,6 +72,7 @@ class EventManager implements EventManagerInterface
         }
         if (isset($this->listeners[$event->getName()])) {
             $listeners = $this->listeners[$event->getName()];
+            //dd($listeners);
             usort($listeners, function ($listenerA, $listenerB) {
                 return $listenerB['priority'] - $listenerA['priority'];
             });

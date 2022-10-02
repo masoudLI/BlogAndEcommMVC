@@ -13,7 +13,7 @@ class RoleMiddlewareFactory
         $this->auth = $auth;
     }
 
-    public function makeForRole(string $role): RoleMiddleware
+    public function makeForRole($role): RoleMiddleware
     {
         return new RoleMiddleware($this->auth, $role);
     }

@@ -9,7 +9,7 @@ final class AddPublishedPost extends AbstractMigration
     public function change(): void
     {
         $this->table('posts')
-            ->addColumn('published', 'boolean', ['default' => false])
+            ->addColumn('published', 'boolean', ['default' => true])
             ->update();
     }
 }

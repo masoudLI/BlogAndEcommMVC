@@ -18,7 +18,6 @@ class PurchaseBasket
     private $stripeUserTable;
     private $stripe;
 
-
     public function __construct(
         OrderRepository $orderRepository,
         Stripe $stripe,
@@ -29,6 +28,35 @@ class PurchaseBasket
         $this->stripe = $stripe;
         $this->stripeUserTable = $stripeUserTable;
         $this->basketRepository = $basketRepository;
+    }
+
+    public function createPaymentSession(Basket $basket, User $user)
+    {
+        $this->basketRepository->hydrateBasket($basket);
+        $result = null;
+        foreach ($basket->getRows() as $row) {
+            $result = $row;
+        }
+        $session = $this->stripe->createSeesionCheck([
+            'success_url' => 'http://localhost:8000/success?success=1',
+            'cancel_url' => 'http://localhost:8000/cancel',
+            'mode' => 'payment',
+            'payment_method_types' => ['card'],
+            'shipping_address_collection' => [
+                'allowed_countries' => ['FR']
+            ],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => $result->getProduct()->getTitle(),
+                    ],
+                    'unit_amount' => $basket->getTotal() * 100,
+                ],
+                'quantity' => $result->getQuantity(),
+            ]],
+        ]);
+        return $session->id;
     }
 
     public function process(Basket $basket, User $user, string $token)
@@ -53,14 +81,14 @@ class PurchaseBasket
             "currency" => "eur",
             "source" => $card->id,
             "customer" => $customer->id,
-            "description" => "Achat sur monsite.com"
+            "description" => "Achat sur monsite.com",
         ]);
 
         $this->orderRepository->createFromBasket($basket, [
             'user_id' => $user->getId(),
-            'vat'   => $vatRate,
+            'vat' => $vatRate,
             'country' => $card->country,
-            'charge_id' => $charge->id
+            'charge_id' => $charge->id,
         ]);
     }
 
@@ -73,7 +101,7 @@ class PurchaseBasket
     {
         $fingerprints = array_map(function ($source) {
             return $source->fingerprint;
-        }, (array)$customer->sources->all());
+        }, (array) $customer->sources->all());
         return in_array($card->fingerprint, $fingerprints);
     }
 
@@ -104,14 +132,14 @@ class PurchaseBasket
             $customer = $this->stripe->getCustomer($customerId);
         } else {
             $customer = $this->stripe->createCustomer([
-                'name'  => $user->getUsername(),
-                'email'  => $user->getEmail(),
-                'source' => $token
+                'name' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'source' => $token,
             ]);
             $this->stripeUserTable->insert([
                 'user_id' => $user->getId(),
                 'customer_id' => $customer->id,
-                'created_at' => date('Y-m-d H:i:s')
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
         }
         return $customer;

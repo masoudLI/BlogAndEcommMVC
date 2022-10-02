@@ -10,6 +10,7 @@ use App\Basket\Repository\OrderRowRepository;
 use App\Shop\Model\Product;
 use Framework\Database\AbstractRepository;
 use Framework\Database\QueryBuilder;
+use Traversable;
 
 class OrderRepository extends AbstractRepository
 {
@@ -43,7 +44,6 @@ class OrderRepository extends AbstractRepository
             ->where('o.order_id IN (' . implode(',', $ordersId) . ')')
             ->select('o.*', 'p.image as productImage', 'p.title as productTitle', 'p.slug as productSlug')
             ->fetchAll();
-
         /** @var OrderRow $row */
         foreach ($rows as $row) {
             foreach ($orders as $order) {

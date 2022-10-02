@@ -83,7 +83,7 @@ class PHPSession implements SessionInterface, \ArrayAccess
      * The return value will be casted to boolean if non-boolean was returned.
      * @since 5.0.0
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         $this->ensureStarted();
         return array_key_exists($offset, $_SESSION);
@@ -98,7 +98,7 @@ class PHPSession implements SessionInterface, \ArrayAccess
      * @return mixed Can return all value types.
      * @since 5.0.0
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->get($offset);
     }
@@ -115,9 +115,9 @@ class PHPSession implements SessionInterface, \ArrayAccess
      * @return void
      * @since 5.0.0
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
-        return $this->set($offset, $value);
+        $this->set($offset, $value);
     }
 
     /**
@@ -129,7 +129,7 @@ class PHPSession implements SessionInterface, \ArrayAccess
      * @return void
      * @since 5.0.0
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->clear($offset);
     }

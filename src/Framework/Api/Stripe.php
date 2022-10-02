@@ -40,4 +40,9 @@ class Stripe
     {
         return $this->stripe->charges->create($params);
     }
+
+    public function createSeesionCheck (array $params)
+    {
+        return $this->stripe->checkout->sessions->create($params);
+    }
 }

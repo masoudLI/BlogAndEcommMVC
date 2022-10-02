@@ -38,7 +38,7 @@ class Router
    * @param array|null $tokens
    */
 
-    public function get(?string $name = null, ?string $path = null, $callable, ?array $tokens = [])
+    public function get(string $name = null, string $path = null, $callable, array $tokens = [])
     {
         $this->map->get($name, $path, $callable)->tokens((array) $tokens);
     }
@@ -50,7 +50,7 @@ class Router
      * @param array|null $tokens
      */
 
-    public function post(?string $name = null, ?string $path = null, $callable, ?array $tokens = [])
+    public function post(string $name = null, string $path = null, $callable, array $tokens = [])
     {
         $this->map->post($name, $path, $callable)->tokens((array) $tokens);
     }
@@ -61,7 +61,7 @@ class Router
      * @param string $name
      * @param array|null $tokens
      */
-    public function delete(?string $name = null, string $path, $callable, ?array $tokens = [])
+    public function delete(string $name = null, string $path, $callable, array $tokens = [])
     {
         $this->map->delete($name, $path, $callable)->tokens((array)$tokens);
     }

@@ -13,9 +13,9 @@ class RoleMiddleware implements MiddlewareInterface
 
     private Auth $auth;
 
-    private string $role;
+    private $role;
 
-    public function __construct(Auth $auth, string $role)
+    public function __construct(Auth $auth, $role)
     {
         $this->auth = $auth;
         $this->role = $role;

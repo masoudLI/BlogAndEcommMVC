@@ -85,7 +85,7 @@ class Basket
 
     public function getRow(Product $product): ?BasketRow
     {
-
+        
         foreach ($this->rows as $row) {
             if ($row->getProductId() === $product->getId()) {
                 return $row;

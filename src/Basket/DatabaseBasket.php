@@ -2,14 +2,13 @@
 
 namespace App\Basket;
 
-use App\Basket\Model\Basket;
-use App\Shop\Model\Product;
 use App\Basket\Basket as BasketClass;
+use App\Basket\Model\Basket;
 use App\Basket\Repository\BasketRepository;
+use App\Shop\Model\Product;
 
 class DatabaseBasket extends BasketClass
 {
-
 
     private $userId;
 
@@ -41,6 +40,7 @@ class DatabaseBasket extends BasketClass
             $this->removeProduct($product);
         } else {
             $row = $this->getRow($product);
+            //dd($row);
             if ($row === null) {
                 $this->rows[] = $this->basketTable->addRow($this->basketEntity, $product, $quantity ?: 1);
             } else {
@@ -59,7 +59,6 @@ class DatabaseBasket extends BasketClass
         $this->basketTable->deleteRow($row);
         parent::removeProduct($product);
     }
-
 
     /**
      * Permets de fusionner les panier
@@ -81,7 +80,7 @@ class DatabaseBasket extends BasketClass
     /**
      * Ca vide le panier
      */
-    public function empty()
+    function empty()
     {
         $this->basketTable->deleteRows($this->basketEntity);
         parent::empty();

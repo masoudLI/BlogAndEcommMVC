@@ -42,7 +42,7 @@ class OrderInvoiceAction
         $this->orderTable->findRows([$order]);
         /** @var User */
         $user = $this->auth->getUser();
-        if ($user->getId() !== $order->getUserId()) {
+        if ($user->getId() !== (int) $order->getUserId()) {
             throw new Auth\ForbiddenException('Vous ne pouvez pas télécharger cette facture');
         }
         return $this->renderer->render('@basket/invoice', compact('order', 'user'));

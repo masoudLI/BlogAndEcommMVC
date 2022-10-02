@@ -32,7 +32,7 @@ class BasketModule extends Module
         ]);
         $router->get('shop_basket', '/panier', BasketAction::class, []);
 
-        
+
         // Tunnel d'achat
         $router->post('basket_recap', '/panier/recap', [LoggedinMiddleware::class, OrderRecapAction::class]);
         $router->post('basket_order_process', '/panier/commander', [LoggedInMiddleware::class, OrderProcessAction::class]);

@@ -31,12 +31,12 @@ class Post
     /**
      * @var
      */
-    private DateTime $createdAt;
+    private ?DateTime $createdAt = null;
 
     /**
      * @var
      */
-    private DateTime $updatedAt;
+    private ?DateTime $updatedAt = null;
 
     /**
      * @var Category
@@ -47,7 +47,9 @@ class Post
     private $image;
 
 
-    private bool $published = false;
+    private bool $published = true;
+
+
 
     /**
      * Get the value of id
@@ -126,7 +128,7 @@ class Post
      *
      * @return  string
      */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -150,7 +152,7 @@ class Post
      *
      * @return  DateTime
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
@@ -177,7 +179,7 @@ class Post
      *
      * @return  DateTime
      */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }

@@ -371,7 +371,7 @@
 					</td>
 				</tr>
 				<tr class="total total">
-					<td class="label" colspan="4">Tax ({{ order.vat | number_format(2, ',') }}%)</td>
+					<td class="label" colspan="4">Tax ({{ order.vat | price_format('%') }})</td>
 					<td class="tright">
 						<strong>{{ vat_only(order.price, order.vat) | price_format }}</strong>
 					</td>

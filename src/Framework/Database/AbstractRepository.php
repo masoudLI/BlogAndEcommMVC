@@ -119,7 +119,7 @@ class AbstractRepository
             ->fetchOrFail();
     }
 
-   
+
     /**
      * count
      *

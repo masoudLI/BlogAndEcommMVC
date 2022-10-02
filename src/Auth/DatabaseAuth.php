@@ -27,7 +27,13 @@ class DatabaseAuth implements Auth
             return null;
         }
         /** @var User */
-        $user = $this->userRepository->findBy('username', $username);
+        //$user = $this->userRepository->findBy('username', $username);
+        $user = $this->userRepository
+            ->makeQuery()
+            ->where("username = :username OR email = :username")
+            ->setParams('username', $username)
+            ->fetchOrFail();
+        dd($user);
         if ($user && \password_verify($password, $user->getPassword())) {
             $this->setUser($user);
             return $user;

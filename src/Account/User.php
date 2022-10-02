@@ -5,10 +5,10 @@ namespace App\Account;
 class User extends \App\Auth\Model\User
 {
 
-    private string $firstname;
+    private ?string $firstname = null;
 
 
-    private string $lastname;
+    private ?string $lastname = null;
 
 
     private string $role;

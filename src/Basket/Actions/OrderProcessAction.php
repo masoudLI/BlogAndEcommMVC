@@ -7,9 +7,9 @@ use App\Basket\PurchaseBasket;
 use App\Basket\Repository\OrderRepository;
 use Framework\Actions\RouterAwareAction;
 use Framework\Auth;
-use Framework\Response\RedirectResponse;
 use Framework\Session\FlashService;
 use Psr\Http\Message\ServerRequestInterface;
+use Zend\Diactoros\Response\JsonResponse;
 
 class OrderProcessAction
 {
@@ -52,13 +52,10 @@ class OrderProcessAction
 
     public function __invoke(ServerRequestInterface $request)
     {
-        $params = $request->getParsedBody();
-        $stripeToken = $params['stripeToken'];
         $basket = $this->basket;
-        $this->purchaseBasket->process($basket, $this->auth->getUser(), $stripeToken);
-        $this->basket->empty();
-        $this->flashService->success('Merci pour votre achat');
-        return new RedirectResponse('/');
-        
+        $id = $this->purchaseBasket->createPaymentSession($basket, $this->auth->getUser());
+        //$this->basket->empty();
+        //$this->flashService->success('Merci pour votre achat');
+        return new JsonResponse(['id' => $id]);
     }
 }

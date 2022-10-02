@@ -23,7 +23,7 @@ class AuthModule extends Module
         $renderer->addPath('auth', __DIR__ . '/views');
         $prefix = $container->get('auth_login');
         $router->get('auth_login', $prefix, LoginAction::class);
-        $router->post(null, $prefix, LoginAttemptAction::class);
+        $router->post(null, $prefix, LoginAttemptAction::class, []);
         $router->post('auth_logout', '/logout', LogoutAction::class);
         $router->get('auth_password', '/password', PasswordForgetAction::class);
         $router->post(null, '/password', PasswordForgetAction::class);
